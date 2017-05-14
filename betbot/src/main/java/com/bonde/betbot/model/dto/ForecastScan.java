@@ -1,5 +1,6 @@
 package com.bonde.betbot.model.dto;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -7,9 +8,18 @@ public class ForecastScan {
 
 	private String source;
 	private Date datetime;
+	private String sport;
+	private String season;
 	
 	private List<ForecastMatchRowTO> rows;
 
+	public ForecastScan()
+	{
+		rows = new ArrayList<ForecastMatchRowTO>();
+	}
+	
+	
+	
 	public String getSource() {
 		return source;
 	}
@@ -32,6 +42,30 @@ public class ForecastScan {
 
 	public void setRows(List<ForecastMatchRowTO> rows) {
 		this.rows = rows;
+	}
+
+
+
+	public String getSport() {
+		return sport;
+	}
+
+
+
+	public void setSport(String sport) {
+		this.sport = sport;
+	}
+
+
+
+	public String getSeason() {
+		return season;
+	}
+
+
+
+	public void setSeason(String season) {
+		this.season = season;
 	}
 	
 	

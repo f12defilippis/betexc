@@ -19,7 +19,7 @@ public class Forecast implements Serializable{
 	private Integer id;
 	
 	@ManyToOne
-    @JoinColumn(name = "match", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "table_match", referencedColumnName = "id", nullable = false)
 	private Match match;
 
 	@ManyToOne

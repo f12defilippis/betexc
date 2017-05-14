@@ -23,6 +23,23 @@ public class ForecastMatchRowTO {
 	
 	private String predBTS;
 	private String predOTS;
+	
+	private String result;
+	private String resultHT;
+	
+	
+	public String getResultHT() {
+		return resultHT;
+	}
+	public void setResultHT(String resultHT) {
+		this.resultHT = resultHT;
+	}
+	public String getResult() {
+		return result;
+	}
+	public void setResult(String result) {
+		this.result = result;
+	}
 	public String getDate() {
 		return date;
 	}
