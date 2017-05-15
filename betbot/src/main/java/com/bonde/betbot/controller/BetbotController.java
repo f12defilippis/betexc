@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bonde.betbot.service.ForecastService;
+import com.bonde.betbot.service.TeamDiscoveryService;
 
 @RestController
 public class BetbotController {
@@ -20,6 +21,8 @@ public class BetbotController {
 	@Autowired
 	private ForecastService forecastService;
 	
+	@Autowired
+	TeamDiscoveryService teamDiscoveryService;
 	
 	@RequestMapping("/scanstatarea")
     private String test(HttpServletRequest req, @RequestParam(value="date", defaultValue="World") String strdate) throws Exception{
@@ -37,6 +40,13 @@ public class BetbotController {
 		
 		return "OK!";
     }
+	
+	@RequestMapping("/csv")
+	public String csv()
+	{
+		teamDiscoveryService.saveTeamFromXls();
+		return "OK";
+	}
 
 	
 	

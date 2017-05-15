@@ -8,6 +8,20 @@ import javax.persistence.Id;
 @Entity
 public class Source implements Serializable{
 
+	public static final int STATAREA = 1;
+	public static final int LIVESCORE = 2;
+	public static final int BETTING1X2 = 3;
+	public static final int VITIBET = 4;
+	public static final int FOREBET = 5;
+	public static final int MYBET = 6;
+	public static final int ZULUBET = 7;
+	public static final int PICKFORWIN = 8;
+	public static final int IAMBETTOR = 9;
+	public static final int PROSOCCER = 10;
+	public static final int BETSTUDY = 11;
+
+	
+	
 	private static final long serialVersionUID = -4040298735765578929L;
 
 	private String url;
@@ -17,6 +31,13 @@ public class Source implements Serializable{
 	private String description;
 	
 	
+	public Source(int source) {
+		id = source;
+	}
+
+	public Source() {
+	}
+
 	public int getId() {
 		return id;
 	}
@@ -37,6 +58,28 @@ public class Source implements Serializable{
 
 	public void setUrl(String url) {
 		this.url = url;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + id;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Source other = (Source) obj;
+		if (id != other.id)
+			return false;
+		return true;
 	}
 	
 	

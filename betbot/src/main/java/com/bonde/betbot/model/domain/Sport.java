@@ -15,6 +15,37 @@ public class Sport implements Serializable{
 	private String description;
 	
 	
+	public Sport(int i) {
+		id = i;
+	}
+	
+	public Sport() {
+	}
+	
+	
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + id;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Sport other = (Sport) obj;
+		if (id != other.id)
+			return false;
+		return true;
+	}
+
 	public int getId() {
 		return id;
 	}

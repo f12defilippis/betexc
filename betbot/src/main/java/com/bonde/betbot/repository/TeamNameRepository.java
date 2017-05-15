@@ -11,4 +11,6 @@ public interface TeamNameRepository extends CrudRepository<TeamName, Integer>{
 
 	List<TeamName> findByNameAndSource(String name, Source source);
 
+	List<TeamName> findByName(String name);
+
 }
