@@ -1,18 +1,35 @@
-package com.bonde.betbot.service;
+package com.bonde.betbot.service.source;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
+import javax.transaction.Transactional;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.bonde.betbot.model.domain.Source;
+import com.bonde.betbot.model.domain.TeamName;
 import com.bonde.betbot.model.dto.ForecastMatchRowTO;
 import com.bonde.betbot.model.dto.ForecastScan;
+import com.bonde.betbot.repository.TeamNameRepository;
+import com.bonde.betbot.repository.TeamRepository;
+import com.bonde.betbot.service.CrawlerService;
 
 @Service
 public class StatareaService extends CrawlerService{
+	
+	@Autowired
+	TeamRepository teamRepository;
+	
+	@Autowired
+	TeamNameRepository teamNameRepository;
+
 
 	public ForecastScan crawlResult(Date date) throws Exception
 	{
@@ -22,8 +39,11 @@ public class StatareaService extends CrawlerService{
 		ret.setSource("1");
 		ret.setSport("1");
 		ret.setSeason("1");
+		
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		String strDate = format.format(date);
 
-		Document document = executeCall("https://www.statarea.com/predictions/date/2017-05-12/competition");
+		Document document = executeCall("https://www.statarea.com/predictions/date/" + strDate+ "/competition");
 
 		Elements competitions = document.select("div[class^=competition]");
 		for(int j = 0 ; j < competitions.size() ; j++)
@@ -166,5 +186,81 @@ public class StatareaService extends CrawlerService{
 		
 		return ret;
 	}
+	
+	@Transactional
+	public void saveTeams(Date date) throws Exception
+	{
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		String strDate = format.format(date);
+		List<String> teamsNotSaved = new ArrayList<String>();
+
+		Document document = executeCall("https://www.statarea.com/predictions/date/" + strDate+ "/competition");
+
+		Elements competitions = document.select("div[class^=competition]");
+		for(int j = 0 ; j < competitions.size() ; j++)
+		{
+			Element competition = competitions.get(j);
+			Elements competitionNameElements = competition.select("div[class^=header]");
+			Element competitionNameElement = competitionNameElements.get(0);
+
+			String competitionName = competitionNameElement.select("div[class=name]").get(0).text();
+			
+			if(competitionName.equals("Advertisement"))
+			{
+				continue;
+			}
+			Element competitionMatchesElement = competition.select("div[class=body]").get(0);
+
+			Elements matchElements = competitionMatchesElement.select("div[class=match]");
+			
+			for(int i = 0 ; i < matchElements.size() ; i++)
+			{
+				Element matchElement = matchElements.get(i);
+
+				String hostTeam = matchElement.select("div[class^=hostteam]").get(0).select("div[class^=name]").get(0).select("a[href]").get(0).text();
+				String guestTeam = matchElement.select("div[class^=guestteam]").get(0).select("div[class^=name]").get(0).select("a[href]").get(0).text();
+				if(!saveTeam(hostTeam))
+				{
+					teamsNotSaved.add(hostTeam);
+				}
+				if(!saveTeam(guestTeam))
+				{
+					teamsNotSaved.add(guestTeam);
+				}
+			}
+		}
+		
+		System.out.println("TEAMS NOT SAVED:");
+		for(String s : teamsNotSaved)
+		{
+			System.out.println(s);
+		}
+		
+	}
+	
+	public boolean saveTeam(String team)
+	{
+		List<TeamName> saved = teamNameRepository.findByNameAndSource(team, new Source(Source.STATAREA));
+		if(saved==null || saved.size()==0)
+		{
+			saved = teamNameRepository.findByName(team);
+			if(saved!=null && saved.size()>0)
+			{
+				TeamName other = saved.get(0);
+				TeamName newTeamName = new TeamName();
+				newTeamName.setName(team);
+				newTeamName.setTeam(other.getTeam());
+				newTeamName.setSource(new Source(Source.STATAREA));
+				
+				teamNameRepository.save(newTeamName);
+			}else
+			{
+				return false;
+			}
+		}
+		return true;
+		
+	}	
+	
 	
 }

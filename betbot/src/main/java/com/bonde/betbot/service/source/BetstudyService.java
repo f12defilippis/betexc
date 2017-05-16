@@ -1,4 +1,4 @@
-package com.bonde.betbot.service;
+package com.bonde.betbot.service.source;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,6 +15,7 @@ import com.bonde.betbot.model.dto.ForecastMatchRowTO;
 import com.bonde.betbot.model.dto.ForecastScan;
 import com.bonde.betbot.repository.TeamNameRepository;
 import com.bonde.betbot.repository.TeamRepository;
+import com.bonde.betbot.service.CrawlerService;
 
 public class BetstudyService extends CrawlerService{
 

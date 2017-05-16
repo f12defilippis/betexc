@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bonde.betbot.service.ForecastService;
 import com.bonde.betbot.service.TeamDiscoveryService;
+import com.bonde.betbot.service.source.StatareaService;
 
 @RestController
 public class BetbotController {
@@ -22,7 +23,10 @@ public class BetbotController {
 	private ForecastService forecastService;
 	
 	@Autowired
-	TeamDiscoveryService teamDiscoveryService;
+	private TeamDiscoveryService teamDiscoveryService;
+	
+	@Autowired
+	private StatareaService statareaService;
 	
 	@RequestMapping("/scanstatarea")
     private String test(HttpServletRequest req, @RequestParam(value="date", defaultValue="World") String strdate) throws Exception{
@@ -47,6 +51,23 @@ public class BetbotController {
 		teamDiscoveryService.saveTeamFromXls();
 		return "OK";
 	}
+
+	@RequestMapping("/teamstatarea")
+    private String teamstatarea(HttpServletRequest req, @RequestParam(value="date", defaultValue="World") String strdate) throws Exception{
+
+		SimpleDateFormat formatDateHour = new SimpleDateFormat("yyyy-MM-dd");
+		Date date;
+		try {
+			date = formatDateHour.parse(strdate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return null;
+		}		
+		
+		statareaService.saveTeams(date);
+		
+		return "OK!";
+    }
 
 	
 	
