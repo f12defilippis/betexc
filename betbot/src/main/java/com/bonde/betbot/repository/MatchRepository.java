@@ -13,5 +13,7 @@ public interface MatchRepository extends CrudRepository<Match, Integer>{
 
 	List<Match> findByDateStartAndHomeTeamAndAwayTeamAndCompetition(Date dateStart, Team homeTeam, Team awayTeam, Competition competition);
 
+	List<Match> findByDateStartAndHomeTeamAndAwayTeam(Date dateStart, Team homeTeam, Team awayTeam);
+
 
 }

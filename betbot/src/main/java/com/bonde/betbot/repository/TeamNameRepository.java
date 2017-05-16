@@ -13,4 +13,6 @@ public interface TeamNameRepository extends CrudRepository<TeamName, Integer>{
 
 	List<TeamName> findByName(String name);
 
+	List<TeamName> findByNameContaining(String name);
+	
 }

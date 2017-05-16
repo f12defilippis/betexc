@@ -2,6 +2,7 @@ package com.bonde.betbot.service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -65,6 +66,11 @@ public class ForecastService {
 	@Autowired
 	ForecastRepository forecastRepository;
 
+	
+	private static int TEAMNAME_DISCOVER_THRESHOLD = 7;
+	
+	
+	
 	@Transactional
 	public String getStatareaForecast(Date date)
 	{
@@ -114,12 +120,25 @@ public class ForecastService {
 			Team homeTeam = teamManagement(row.getHomeTeam(), source, sport);
 			Team awayTeam = teamManagement(row.getAwayTeam(), source, sport);
 			
-			List<Match> matchList = matchRepository.findByDateStartAndHomeTeamAndAwayTeamAndCompetition(dateManagement(date, row.getHour()),homeTeam,awayTeam,competition);
+			//MATCH
+			List<Match> matchList = new ArrayList<Match>();
+			if(competition!=null)
+			{
+				matchRepository.findByDateStartAndHomeTeamAndAwayTeamAndCompetition(dateManagement(date, row.getHour()),homeTeam,awayTeam,competition);
+			}else
+			{
+				matchRepository.findByDateStartAndHomeTeamAndAwayTeam(dateManagement(date, row.getHour()),homeTeam,awayTeam);
+			}
+
 			Match match = new Match();
-			
 			if(matchList!=null && matchList.size()>0)
 			{
 				match = matchList.get(0);
+				if(match.getCompetition()==null && competition!=null)
+				{
+					match.setCompetition(competition);
+					matchRepository.save(match);
+				}
 			}else
 			{
 				match.setDateStart(dateManagement(date, row.getHour()));
@@ -130,6 +149,7 @@ public class ForecastService {
 				matchRepository.save(match);
 			}
 			
+			//FORECAST
 			forecastManagement(row.getPred1(), match, source, new ForecastTypeOccurrence(ForecastTypeOccurrence.PRED1));
 			forecastManagement(row.getPredX(), match, source, new ForecastTypeOccurrence(ForecastTypeOccurrence.PREDX));
 			forecastManagement(row.getPred2(), match, source, new ForecastTypeOccurrence(ForecastTypeOccurrence.PRED2));
@@ -187,7 +207,6 @@ public class ForecastService {
 				forecastManagement(String.valueOf(pred12ht), match, source, new ForecastTypeOccurrence(ForecastTypeOccurrence.PRED12HT));
 			}
 			
-			
 		}
 	}
 
@@ -242,14 +261,65 @@ public class ForecastService {
 		}else
 		{
 			//TODO teamnamemanagement
-			team.setName(t);
-			team.setSport(sport);
-			teamRepository.save(team);
 			
-			teamName.setName(t);
-			teamName.setTeam(team);
-			teamName.setSource(source);
-			teamNameRepository.save(teamName);
+			List<TeamName> listtname = teamNameRepository.findByName(t);
+			
+			if(listtname == null || listtname.size()==0)
+			{
+				String name = t;
+				boolean found = false;
+				
+				//se il nome della squadra è composta da due parole faccio una like sulla parola più lunga
+				String [] splitted = name.split(" ");
+				if(splitted!=null && splitted.length>1)
+				{
+					String longer = splitted[0].length() >= splitted[1].length() ? splitted[0] : splitted[1];
+					listtname = teamNameRepository.findByNameContaining(longer);
+					if(listtname != null && listtname.size()>0)
+					{
+						found = true;
+					}
+				}
+
+				//Ciclo togliendo una lettera alla volta
+				boolean head = true;
+				while(name.length()>=TEAMNAME_DISCOVER_THRESHOLD && !found)
+				{
+					listtname = teamNameRepository.findByNameContaining(name);
+					if(listtname != null && listtname.size()>0)
+					{
+						found = true;
+					}
+					if(head)
+					{
+						name = name.substring(1, name.length());
+						head = false;
+					}else
+					{
+						name = name.substring(0, name.length()-1);
+						head = true;
+					}
+				}
+			}
+			
+			if(listtname != null && listtname.size()>0)
+			{
+				teamName = listtn.get(0);
+				team = teamName.getTeam();
+				teamName.setSource(source);
+				teamNameRepository.save(teamName);
+			}else
+			{
+				team.setName(t);
+				team.setSport(sport);
+				teamRepository.save(team);
+				
+				teamName.setName(t);
+				teamName.setTeam(team);
+				teamName.setSource(source);
+				teamNameRepository.save(teamName);
+			}
+			
 		}
 		return team;
 	}
