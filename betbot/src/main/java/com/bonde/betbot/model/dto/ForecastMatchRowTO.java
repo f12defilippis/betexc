@@ -1,9 +1,14 @@
 package com.bonde.betbot.model.dto;
 
+import java.util.Date;
+
 public class ForecastMatchRowTO {
 
-	private String date;
-	private String hour;
+//	private String date;
+//	private String hour;
+
+	private Date date;
+	
 	private String country;
 	private String competition;
 	private String homeTeam;
@@ -40,18 +45,7 @@ public class ForecastMatchRowTO {
 	public void setResult(String result) {
 		this.result = result;
 	}
-	public String getDate() {
-		return date;
-	}
-	public void setDate(String date) {
-		this.date = date;
-	}
-	public String getHour() {
-		return hour;
-	}
-	public void setHour(String hour) {
-		this.hour = hour;
-	}
+
 	public String getCountry() {
 		return country;
 	}
@@ -141,6 +135,12 @@ public class ForecastMatchRowTO {
 	}
 	public void setPredOTS(String predOTS) {
 		this.predOTS = predOTS;
+	}
+	public Date getDate() {
+		return date;
+	}
+	public void setDate(Date date) {
+		this.date = date;
 	}
 	
 	

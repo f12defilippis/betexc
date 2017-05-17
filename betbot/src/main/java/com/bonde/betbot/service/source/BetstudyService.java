@@ -44,8 +44,8 @@ public class BetstudyService extends CrawlerService{
 			Elements cells = row.select("td");
 			
 			//TODO format date
-			String strDate = cells.get(0).select("span").get(0).text();
-			match.setDate(strDate);
+//			String strDate = cells.get(0).select("span").get(0).text();
+//			match.setDate(strDate);
 			
 			String teams = cells.get(1).select("a").get(1).text();
 			match.setHomeTeam(teams.split("-")[0].trim());

@@ -19,6 +19,7 @@ public class Source implements Serializable{
 	public static final int IAMBETTOR = 9;
 	public static final int PROSOCCER = 10;
 	public static final int BETSTUDY = 11;
+	public static final int SCIBET = 12;
 
 	
 	

@@ -9,6 +9,8 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +26,8 @@ import au.com.bytecode.opencsv.CSVReader;
 @Service
 public class TeamDiscoveryService {
 
+	protected final Logger log = LoggerFactory.getLogger(this.getClass());  
+	
 	@Autowired
 	TeamRepository teamRepository;
 	
@@ -44,7 +48,7 @@ public class TeamDiscoveryService {
 		    	String[] row = allRows.get(i);
 		        saveRow(row);
 		     }
-		    System.out.println("Saved " + (allRows.size()-1) + " teams");
+		    log.info("Saved " + (allRows.size()-1) + " teams");
 			reader.close();
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -80,7 +84,7 @@ public class TeamDiscoveryService {
 		saveName(team, row[8], Source.IAMBETTOR);
 		saveName(team, row[9], Source.PROSOCCER);
 		
-		System.out.println(team.getName() + " saved!");
+		log.debug(team.getName() + " saved!");
 		
 	}
 

@@ -11,6 +11,7 @@ import com.bonde.betbot.model.domain.ForecastType;
 import com.bonde.betbot.model.domain.ForecastTypeOccurrence;
 import com.bonde.betbot.model.domain.Match;
 import com.bonde.betbot.model.domain.Result;
+import com.bonde.betbot.model.domain.ScanType;
 import com.bonde.betbot.model.domain.Source;
 import com.bonde.betbot.model.dto.ForecastMatchRowTO;
 import com.bonde.betbot.model.dto.ForecastScan;
@@ -23,18 +24,27 @@ public class ResultService extends ForecastResultService{
 	
 	
 	@Transactional
-	public String getStatareaForecast(Date date)
+	public String getStatareaResults(Date date)
 	{
 		try {
+			Date start = new Date();
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 			String strDate = format.format(date);
 			
-			System.out.println("Starting crawling match result from statarea for date " + strDate);
+			log.info("Starting crawling match result from statarea for date " + strDate);
 			ForecastScan scan = statareaService.crawlResult(date);
-			System.out.println("Finished crawling matches from statarea. " + scan.getRows().size() + " matches found");
-			System.out.println("Starting saving forecast");
+			log.info("Finished crawling matches from statarea. " + scan.getRows().size() + " matches found");
+			log.info("Starting saving forecast");
+			int matchSkipped = saveData(scan, date);
 			saveData(scan, date);
-			System.out.println("Finished saving forecast");
+			log.info("Finished saving results for date " + strDate + "." + (scan.getRows().size() - matchSkipped) + " Matches Saved. " + matchSkipped + " Matches Skipped");
+
+			Date end = new Date();
+
+			summaryService.saveSummary(new Source(Source.STATAREA), new ScanType(ScanType.RESULT), start, end, scan.getRows().size() - matchSkipped, scan.getRows().size());
+		
+		
+		
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "KO";
@@ -43,21 +53,55 @@ public class ResultService extends ForecastResultService{
 		return "OK";
 	}	
 	
-	public void saveData(ForecastScan scan, Date date)
+	@Transactional
+	public String getLivescoreResults(Date date)
 	{
+		try {
+			Date start = new Date();
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+			String strDate = format.format(date);
+			
+			log.info("Starting crawling match result from livescore24 for date " + strDate);
+			ForecastScan scan = livescore24Service.crawlResult(date);
+			log.info("Finished crawling matches from livescore24. " + scan.getRows().size() + " matches found");
+			log.info("Starting saving results");
+			int matchSkipped = saveData(scan, date);
+			saveData(scan, date);
+			log.info("Finished saving results for date " + strDate + "." + (scan.getRows().size() - matchSkipped) + " Matches Saved. " + matchSkipped + " Matches Skipped");
+			Date end = new Date();
+			summaryService.saveSummary(new Source(Source.LIVESCORE), new ScanType(ScanType.RESULT), start, end, scan.getRows().size() - matchSkipped, scan.getRows().size());
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "KO";
+		}
+		
+		return "OK";
+	}		
+	
+	
+	public int saveData(ForecastScan scan, Date date)
+	{
+		int matchSkipped = 0;
 		for(ForecastMatchRowTO row : scan.getRows())
 		{
 			Source source = sourceRepository.findOne(Integer.parseInt(scan.getSource()));
 			Match match = saveMatchData(row, scan, date, source);
-		
-			saveResult(ForecastType.PRED1X2, row.getResult(), row.getResultHT(), match);
-			saveResult(ForecastType.PRED1X2HT, row.getResult(), row.getResultHT(), match);
-			saveResult(ForecastType.UO15, row.getResult(), row.getResultHT(), match);
-			saveResult(ForecastType.UO25, row.getResult(), row.getResultHT(), match);
-			saveResult(ForecastType.UO35, row.getResult(), row.getResultHT(), match);
-			saveResult(ForecastType.DC, row.getResult(), row.getResultHT(), match);
-			saveResult(ForecastType.DCHT, row.getResult(), row.getResultHT(), match);
+			if(match!=null)
+			{
+				saveResult(ForecastType.PRED1X2, row.getResult(), row.getResultHT(), match);
+				saveResult(ForecastType.PRED1X2HT, row.getResult(), row.getResultHT(), match);
+				saveResult(ForecastType.UO15, row.getResult(), row.getResultHT(), match);
+				saveResult(ForecastType.UO25, row.getResult(), row.getResultHT(), match);
+				saveResult(ForecastType.UO35, row.getResult(), row.getResultHT(), match);
+				saveResult(ForecastType.DC, row.getResult(), row.getResultHT(), match);
+				saveResult(ForecastType.DCHT, row.getResult(), row.getResultHT(), match);
+			}else
+			{
+				matchSkipped++;
+			}
 		}
+		return matchSkipped;
 
 	}
 

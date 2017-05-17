@@ -20,6 +20,7 @@ import com.bonde.betbot.model.dto.ForecastScan;
 import com.bonde.betbot.repository.TeamNameRepository;
 import com.bonde.betbot.repository.TeamRepository;
 import com.bonde.betbot.service.CrawlerService;
+import com.bonde.betbot.util.DateUtil;
 
 @Service
 public class StatareaService extends CrawlerService{
@@ -79,7 +80,7 @@ public class StatareaService extends CrawlerService{
 				
 				ForecastMatchRowTO row = new ForecastMatchRowTO();
 				
-				row.setHour(hour);
+				row.setDate(DateUtil.dateManagement(date, hour));
 				row.setHomeTeam(hostTeam);
 				row.setAwayTeam(guestTeam);
 				
@@ -172,7 +173,7 @@ public class StatareaService extends CrawlerService{
 				row.setPredBTS(goal);
 				row.setPredOTS(nogoal);
 				
-				row.setHour(hour);
+				row.setDate(DateUtil.dateManagement(date, hour));
 				row.setHomeTeam(hostTeam);
 				row.setAwayTeam(guestTeam);
 				
