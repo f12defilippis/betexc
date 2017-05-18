@@ -37,6 +37,27 @@ public class Match implements Serializable{
 	
 	private String finalScore;
 	private String halftimeScore;
+	
+	private Date dateCreated;
+	private Date dateUpdated;
+	
+	public Date getDateCreated() {
+		return dateCreated;
+	}
+
+	public void setDateCreated(Date dateCreated) {
+		this.dateCreated = dateCreated;
+	}
+
+	public Date getDateUpdated() {
+		return dateUpdated;
+	}
+
+	public void setDateUpdated(Date dateUpdated) {
+		this.dateUpdated = dateUpdated;
+	}
+	
+	
 	public Integer getId() {
 		return id;
 	}

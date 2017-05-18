@@ -80,7 +80,7 @@ public class StatareaService extends CrawlerService{
 				
 				ForecastMatchRowTO row = new ForecastMatchRowTO();
 				
-				row.setDate(DateUtil.dateManagement(date, hour));
+				row.setDate(DateUtil.addHourToDateandAddHours(date, hour,2));
 				row.setHomeTeam(hostTeam);
 				row.setAwayTeam(guestTeam);
 				
@@ -173,7 +173,7 @@ public class StatareaService extends CrawlerService{
 				row.setPredBTS(goal);
 				row.setPredOTS(nogoal);
 				
-				row.setDate(DateUtil.dateManagement(date, hour));
+				row.setDate(DateUtil.addHourToDateandAddHours(date, hour,2));
 				row.setHomeTeam(hostTeam);
 				row.setAwayTeam(guestTeam);
 				

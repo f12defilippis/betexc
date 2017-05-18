@@ -6,6 +6,7 @@ import java.util.Date;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.bonde.betbot.model.domain.ForecastType;
 import com.bonde.betbot.model.domain.ForecastTypeOccurrence;
@@ -17,6 +18,7 @@ import com.bonde.betbot.model.dto.ForecastMatchRowTO;
 import com.bonde.betbot.model.dto.ForecastScan;
 import com.bonde.betbot.repository.ResultRepository;
 
+@Service
 public class ResultService extends ForecastResultService{
 	
 	@Autowired
@@ -41,7 +43,7 @@ public class ResultService extends ForecastResultService{
 
 			Date end = new Date();
 
-			summaryService.saveSummary(new Source(Source.STATAREA), new ScanType(ScanType.RESULT), start, end, scan.getRows().size() - matchSkipped, scan.getRows().size());
+			summaryService.saveSummary(new Source(Source.STATAREA), new ScanType(ScanType.RESULT), start, end, scan.getRows().size() - matchSkipped, scan.getRows().size(),date);
 		
 		
 		
@@ -66,10 +68,9 @@ public class ResultService extends ForecastResultService{
 			log.info("Finished crawling matches from livescore24. " + scan.getRows().size() + " matches found");
 			log.info("Starting saving results");
 			int matchSkipped = saveData(scan, date);
-			saveData(scan, date);
 			log.info("Finished saving results for date " + strDate + "." + (scan.getRows().size() - matchSkipped) + " Matches Saved. " + matchSkipped + " Matches Skipped");
 			Date end = new Date();
-			summaryService.saveSummary(new Source(Source.LIVESCORE), new ScanType(ScanType.RESULT), start, end, scan.getRows().size() - matchSkipped, scan.getRows().size());
+			summaryService.saveSummary(new Source(Source.LIVESCORE), new ScanType(ScanType.RESULT), start, end, scan.getRows().size() - matchSkipped, scan.getRows().size(), date);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -85,21 +86,29 @@ public class ResultService extends ForecastResultService{
 		int matchSkipped = 0;
 		for(ForecastMatchRowTO row : scan.getRows())
 		{
-			Source source = sourceRepository.findOne(Integer.parseInt(scan.getSource()));
-			Match match = saveMatchData(row, scan, date, source);
-			if(match!=null)
+			try
 			{
-				saveResult(ForecastType.PRED1X2, row.getResult(), row.getResultHT(), match);
-				saveResult(ForecastType.PRED1X2HT, row.getResult(), row.getResultHT(), match);
-				saveResult(ForecastType.UO15, row.getResult(), row.getResultHT(), match);
-				saveResult(ForecastType.UO25, row.getResult(), row.getResultHT(), match);
-				saveResult(ForecastType.UO35, row.getResult(), row.getResultHT(), match);
-				saveResult(ForecastType.DC, row.getResult(), row.getResultHT(), match);
-				saveResult(ForecastType.DCHT, row.getResult(), row.getResultHT(), match);
-			}else
+				Source source = sourceRepository.findOne(Integer.parseInt(scan.getSource()));
+				Match match = saveMatchData(row, scan, date, source);
+				if(match!=null && row.getResult()!=null && !row.getResult().trim().equals("-"))
+				{
+					saveResult(ForecastType.PRED1X2, row.getResult(), row.getResultHT(), match);
+					saveResult(ForecastType.PRED1X2HT, row.getResult(), row.getResultHT(), match);
+					saveResult(ForecastType.UO15, row.getResult(), row.getResultHT(), match);
+					saveResult(ForecastType.UO25, row.getResult(), row.getResultHT(), match);
+					saveResult(ForecastType.UO35, row.getResult(), row.getResultHT(), match);
+					saveResult(ForecastType.DC, row.getResult(), row.getResultHT(), match);
+					saveResult(ForecastType.DCHT, row.getResult(), row.getResultHT(), match);
+				}else
+				{
+					matchSkipped++;
+				}
+			}catch(NumberFormatException ioex)
 			{
+				log.warn("NumberFormatException during saving match row: " + ioex.getMessage());
 				matchSkipped++;
 			}
+
 		}
 		return matchSkipped;
 
@@ -111,8 +120,10 @@ public class ResultService extends ForecastResultService{
 		ForecastTypeOccurrence fto = new ForecastTypeOccurrence();
 		int homeScore = Integer.valueOf(result.split("-")[0].trim());
 		int awayScore = Integer.valueOf(result.split("-")[1].trim());
-		int homeScoreHt = Integer.valueOf(result.split(":")[0].trim());
-		int awayScoreHt = Integer.valueOf(result.split(":")[1].trim());
+		int homeScoreHt = Integer.valueOf(resultht.split(":")[0].trim());
+		int awayScoreHt = Integer.valueOf(resultht.split(":")[1].trim());
+		
+		Date now = new Date();
 		switch(forecastType)
 		{
 			case ForecastType.PRED1X2:
@@ -189,6 +200,8 @@ public class ResultService extends ForecastResultService{
 				Result res2 = new Result();
 				res2.setForecastTypeOccurrence(fto2);
 				res2.setMatch(match);
+				res2.setDateCreated(now);
+				res2.setDateUpdated(now);
 				resultRepository.save(res2);
 				
 				break;
@@ -214,6 +227,8 @@ public class ResultService extends ForecastResultService{
 				Result res3 = new Result();
 				res3.setForecastTypeOccurrence(fto3);
 				res3.setMatch(match);
+				res3.setDateCreated(now);
+				res3.setDateUpdated(now);
 				resultRepository.save(res3);				
 				
 				break;
@@ -222,6 +237,8 @@ public class ResultService extends ForecastResultService{
 		Result res = new Result();
 		res.setForecastTypeOccurrence(fto);
 		res.setMatch(match);
+		res.setDateCreated(now);
+		res.setDateUpdated(now);
 		
 		resultRepository.save(res);
 		

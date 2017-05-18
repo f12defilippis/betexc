@@ -25,6 +25,7 @@ public class ScanSummary implements Serializable{
 	
 	private Date dateStart;
 	private Date dateEnd;
+	private Date date;
 	
 	private Integer totalRecord;
 
@@ -89,6 +90,14 @@ public class ScanSummary implements Serializable{
 
 	public void setDateEnd(Date dateEnd) {
 		this.dateEnd = dateEnd;
+	}
+
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
 	}	
 
 		

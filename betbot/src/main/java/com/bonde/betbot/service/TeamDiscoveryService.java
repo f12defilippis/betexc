@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Date;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -47,6 +48,10 @@ public class TeamDiscoveryService {
 		    for(int i = 1 ; i < allRows.size() ; i++){
 		    	String[] row = allRows.get(i);
 		        saveRow(row);
+		        if(i % 10 == 0)
+		        {
+				    log.info("PARTIAL: Saved " + i + " teams");
+		        }
 		     }
 		    log.info("Saved " + (allRows.size()-1) + " teams");
 			reader.close();
@@ -66,12 +71,22 @@ public class TeamDiscoveryService {
 	private void saveRow(String[] row)
 	{
 
-		Team team = new Team();
-		team.setName(row[1]);
 		Sport sport = new Sport(1);
-		team.setSport(sport);
-		
-		teamRepository.save(team);
+		List<Team> lt = teamRepository.findByNameAndSport(row[1], sport);
+		Team team = new Team();
+		if(lt==null || lt.size()==0)
+		{
+			Date now = new Date();
+			team.setName(row[1]);
+			team.setSport(sport);
+			team.setDateCreated(now);
+			team.setDateUpdated(now);
+			
+			teamRepository.save(team);
+		}else
+		{
+			team = lt.get(0);
+		}
 		
 		
 		saveName(team, row[1], Source.LIVESCORE);
@@ -92,12 +107,20 @@ public class TeamDiscoveryService {
 	{
 		if(name!=null && !name.equals(""))
 		{
-			TeamName tn = new TeamName();
-			tn.setTeam(team);
-			tn.setSource(new Source(source));
-			tn.setName(name);
-			
-			teamNameRepository.save(tn);
+			List<TeamName> ltn = teamNameRepository.findByNameAndSource(name, new Source(source));
+			if(ltn==null || ltn.size()==0)
+			{
+				Date now = new Date();
+				TeamName tn = new TeamName();
+				tn.setTeam(team);
+				tn.setSource(new Source(source));
+				tn.setName(name);
+				
+				tn.setDateCreated(now);
+				tn.setDateUpdated(now);
+				
+				teamNameRepository.save(tn);
+			}
 		}
 	}
 	

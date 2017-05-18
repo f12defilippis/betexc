@@ -65,7 +65,7 @@ public class OddService {
 			log.info("Finished saving odds." + (matchList.size() - matchSkipped) + " Matches Saved. " + matchSkipped + " Matches Skipped");
 			Date end = new Date();
 
-			summaryService.saveSummary(new Source(Source.BETTING1X2), new ScanType(ScanType.ODD), start, end, matchList.size() - matchSkipped, matchList.size());
+			summaryService.saveSummary(new Source(Source.BETTING1X2), new ScanType(ScanType.ODD), start, end, matchList.size() - matchSkipped, matchList.size(),date);
 		
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -104,11 +104,15 @@ public class OddService {
 	{
 		ForecastTypeOccurrence fto = new ForecastTypeOccurrence(forecastTypeOccurrence);
 		
+		Date now = new Date();
+		
 		Odd odd = new Odd();
 		odd.setFirstValue(value);
 		odd.setForecastTypeOccurrence(fto);
 		odd.setMatch(match);
-
+		odd.setDateCreated(now);
+		odd.setDateUpdated(now);
+		
 		oddRepository.save(odd);
 	}
 	
@@ -131,6 +135,8 @@ public class OddService {
 		//MATCH
 		List<Match> matchList = matchRepository.findByDateStartAndHomeTeamAndAwayTeam(date,homeTeam,awayTeam);
 
+		Date now = new Date();
+		
 		Match match = new Match();
 		if(matchList!=null && matchList.size()>0)
 		{
@@ -141,6 +147,10 @@ public class OddService {
 			match.setHomeTeam(homeTeam);
 			match.setAwayTeam(awayTeam);
 
+			match.setDateCreated(now);
+			match.setDateUpdated(now);
+			
+			
 			matchRepository.save(match);
 		}
 		return match;
@@ -179,10 +189,15 @@ public class OddService {
 				team = teamName.getTeam();
 				
 				
+				Date now = new Date();
+				
 				TeamName newTeamName = new TeamName();
 				newTeamName.setName(t);
 				newTeamName.setSource(source);
 				newTeamName.setTeam(team);
+				newTeamName.setDateCreated(now);
+				newTeamName.setDateUpdated(now);
+				
 				
 				teamNameRepository.save(newTeamName);
 

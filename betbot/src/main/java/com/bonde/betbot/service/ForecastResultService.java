@@ -137,6 +137,8 @@ public abstract class ForecastResultService {
 					newTeamName.setName(t);
 					newTeamName.setSource(source);
 					newTeamName.setTeam(team);
+					newTeamName.setDateCreated(new Date());
+					newTeamName.setDateUpdated(new Date());
 					
 					teamNameRepository.save(newTeamName);
 
@@ -187,7 +189,8 @@ public abstract class ForecastResultService {
 				competition.setDescription(row.getCompetition());
 				competition.setSeason(season);
 				competition.setSport(sport);
-				
+				competition.setDateCreated(new Date());
+				competition.setDateUpdated(new Date());
 				competitionRepository.save(competition);
 			}
 		}
@@ -205,13 +208,13 @@ public abstract class ForecastResultService {
 		
 		//MATCH
 		List<Match> matchList = new ArrayList<Match>();
-		if(competition!=null)
-		{
-			matchList = matchRepository.findByDateStartAndHomeTeamAndAwayTeamAndCompetition(row.getDate(),homeTeam,awayTeam,competition);
-		}else
-		{
+//		if(competition!=null)
+//		{
+//			matchList = matchRepository.findByDateStartAndHomeTeamAndAwayTeamAndCompetition(row.getDate(),homeTeam,awayTeam,competition);
+//		}else
+//		{
 			matchList = matchRepository.findByDateStartAndHomeTeamAndAwayTeam(row.getDate(),homeTeam,awayTeam);
-		}
+//		}
 
 		Match match = new Match();
 		if(matchList!=null && matchList.size()>0)
@@ -220,7 +223,6 @@ public abstract class ForecastResultService {
 			if(match.getCompetition()==null && competition!=null)
 			{
 				match.setCompetition(competition);
-				matchRepository.save(match);
 			}
 		}else
 		{
@@ -228,9 +230,14 @@ public abstract class ForecastResultService {
 			match.setHomeTeam(homeTeam);
 			match.setAwayTeam(awayTeam);
 			match.setCompetition(competition);
-
-			matchRepository.save(match);
+			match.setDateCreated(new Date());
 		}
+		if(row.getResult()!=null)
+			match.setFinalScore(row.getResult());
+		if(row.getResultHT()!=null)
+			match.setHalftimeScore(row.getResultHT());
+		match.setDateUpdated(new Date());
+		matchRepository.save(match);
 		return match;
 	}
 	

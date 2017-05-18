@@ -42,7 +42,7 @@ public class ForecastService extends ForecastResultService{
 			log.info("Finished saving forecast." + (scan.getRows().size() - matchSkipped) + " Matches Saved. " + matchSkipped + " Matches Skipped");
 			Date end = new Date();
 			
-			summaryService.saveSummary(new Source(Source.STATAREA), new ScanType(ScanType.FORECAST), start, end, scan.getRows().size() - matchSkipped, scan.getRows().size());
+			summaryService.saveSummary(new Source(Source.STATAREA), new ScanType(ScanType.FORECAST), start, end, scan.getRows().size() - matchSkipped, scan.getRows().size(),date);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "KO";
@@ -66,7 +66,7 @@ public class ForecastService extends ForecastResultService{
 			log.info("Finished saving forecast." + (scan.getRows().size() - matchSkipped) + " Matches Saved. " + matchSkipped + " Matches Skipped");
 			Date end = new Date();
 			
-			summaryService.saveSummary(new Source(Source.SCIBET), new ScanType(ScanType.FORECAST), start, end, scan.getRows().size() - matchSkipped, scan.getRows().size());
+			summaryService.saveSummary(new Source(Source.SCIBET), new ScanType(ScanType.FORECAST), start, end, scan.getRows().size() - matchSkipped, scan.getRows().size(),date);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "KO";
@@ -178,8 +178,9 @@ public class ForecastService extends ForecastResultService{
 			}
 					
 			List<Forecast> listForecast = forecastRepository.findByMatchAndSourceAndForecastTypeOccurrence(match, source, forecastTypeOccurrence);
-
+			Date now = new Date();
 			Forecast forecast = new Forecast();
+			
 			if(listForecast!=null && listForecast.size()>0)
 			{
 				forecast = listForecast.get(0);
@@ -188,8 +189,11 @@ public class ForecastService extends ForecastResultService{
 				forecast.setForecastTypeOccurrence(forecastTypeOccurrence);
 				forecast.setMatch(match);
 				forecast.setSource(source);
+				forecast.setDateCreated(now);
 			}
+
 			forecast.setForecastValue(forecastValue);
+			forecast.setDateUpdated(now);
 			forecastRepository.save(forecast);
 		}
 	}

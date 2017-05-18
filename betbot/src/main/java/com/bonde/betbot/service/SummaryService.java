@@ -18,12 +18,13 @@ public class SummaryService {
 	ScanSummaryRepository scanSummaryRepository;
 	
 	
-	public void saveSummary(Source source, ScanType scanType, Date start, Date end, int recordWorked, int totalRecord)
+	public void saveSummary(Source source, ScanType scanType, Date start, Date end, int recordWorked, int totalRecord, Date date)
 	{
 		
 		ScanSummary ss = new ScanSummary();
 		ss.setDateEnd(end);
 		ss.setDateStart(start);
+		ss.setDate(date);
 		ss.setRecordWorked(recordWorked);
 		ss.setScanType(scanType);
 		ss.setSource(source);

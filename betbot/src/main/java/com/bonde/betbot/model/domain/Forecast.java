@@ -1,6 +1,7 @@
 package com.bonde.betbot.model.domain;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -33,6 +34,26 @@ public class Forecast implements Serializable{
 	@ManyToOne
     @JoinColumn(name = "forecast_value", referencedColumnName = "id", nullable = false)
 	private ForecastValue forecastValue;
+	
+	private Date dateCreated;
+	private Date dateUpdated;
+	
+	public Date getDateCreated() {
+		return dateCreated;
+	}
+
+	public void setDateCreated(Date dateCreated) {
+		this.dateCreated = dateCreated;
+	}
+
+	public Date getDateUpdated() {
+		return dateUpdated;
+	}
+
+	public void setDateUpdated(Date dateUpdated) {
+		this.dateUpdated = dateUpdated;
+	}
+	
 
 	public Integer getId() {
 		return id;

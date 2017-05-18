@@ -1,6 +1,7 @@
 package com.bonde.betbot.model.domain;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,12 +20,33 @@ public class Result implements Serializable{
 	private Integer id;
 	
 	@ManyToOne
-    @JoinColumn(name = "match", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "match_id", referencedColumnName = "id", nullable = false)
 	private Match match;
 
 	@ManyToOne
     @JoinColumn(name = "forecast_type_occurrence", referencedColumnName = "id", nullable = false)
 	private ForecastTypeOccurrence forecastTypeOccurrence;
+	
+	private Date dateCreated;
+	private Date dateUpdated;
+	
+	public Date getDateCreated() {
+		return dateCreated;
+	}
+
+	public void setDateCreated(Date dateCreated) {
+		this.dateCreated = dateCreated;
+	}
+
+	public Date getDateUpdated() {
+		return dateUpdated;
+	}
+
+	public void setDateUpdated(Date dateUpdated) {
+		this.dateUpdated = dateUpdated;
+	}
+	
+	
 
 	public Integer getId() {
 		return id;
