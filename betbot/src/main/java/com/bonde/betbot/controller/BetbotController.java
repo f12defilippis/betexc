@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bonde.betbot.service.ForecastService;
+import com.bonde.betbot.service.OddService;
 import com.bonde.betbot.service.ResultService;
 import com.bonde.betbot.service.TeamDiscoveryService;
+import com.bonde.betbot.service.ValueBetService;
 import com.bonde.betbot.util.DateUtil;
 
 @RestController
@@ -28,6 +30,12 @@ public class BetbotController {
 
 	@Autowired
 	private ResultService resultService;
+
+	@Autowired
+	private OddService oddService;
+
+	@Autowired
+	private ValueBetService valueBetService;
 
 	@Autowired
 	private TeamDiscoveryService teamDiscoveryService;
@@ -123,6 +131,44 @@ public class BetbotController {
 		
 		return "OK!";
     }
+	
+	@RequestMapping("/scanodds")
+    private String scanodds(HttpServletRequest req, @RequestParam(value="date", defaultValue="World") String strdate) throws Exception{
+
+		SimpleDateFormat formatDateHour = new SimpleDateFormat("yyyy-MM-dd");
+		Date date;
+		try {
+			date = formatDateHour.parse(strdate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return null;
+		}		
+		
+		oddService.getBettingTips1X2Odds(date);
+		
+		return "OK!";
+    }	
+	
+	@RequestMapping("/scanvaluebet")
+    private String scanvaluebet(HttpServletRequest req, @RequestParam(value="date", defaultValue="World") String strdate) throws Exception{
+
+		SimpleDateFormat formatDateHour = new SimpleDateFormat("yyyy-MM-dd");
+		Date date;
+		try {
+			date = formatDateHour.parse(strdate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return null;
+		}		
+		
+		int ret = valueBetService.calculateValueBet(date);
+		
+		log.info("Calculated " + ret + " ValueBets for date: " + strdate);
+		
+		return "OK!";
+    }		
+	
+	
 	
 	
 	@RequestMapping("/csv")

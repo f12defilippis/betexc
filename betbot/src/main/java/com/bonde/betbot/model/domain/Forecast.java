@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -37,6 +38,10 @@ public class Forecast implements Serializable{
 	
 	private Date dateCreated;
 	private Date dateUpdated;
+	
+	@ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name = "table_match", referencedColumnName = "id", nullable = false,  insertable=false, updatable=false)
+	private Match matchlazy;	
 	
 	public Date getDateCreated() {
 		return dateCreated;
@@ -93,6 +98,14 @@ public class Forecast implements Serializable{
 
 	public void setForecastValue(ForecastValue forecastValue) {
 		this.forecastValue = forecastValue;
+	}
+
+	public Match getMatchlazy() {
+		return matchlazy;
+	}
+
+	public void setMatchlazy(Match matchlazy) {
+		this.matchlazy = matchlazy;
 	}
 	
 	

@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -23,6 +24,12 @@ public class Odd implements Serializable{
     @JoinColumn(name = "match_id", referencedColumnName = "id", nullable = false)
 	private Match match;
 
+	@ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name = "match_id", referencedColumnName = "id", nullable = false,  insertable=false, updatable=false)
+	private Match matchlazy;
+	
+	
+	
 	@ManyToOne
     @JoinColumn(name = "forecast_type_occurrence", referencedColumnName = "id", nullable = false)
 	private ForecastTypeOccurrence forecastTypeOccurrence;
@@ -79,6 +86,14 @@ public class Odd implements Serializable{
 
 	public void setFirstValue(double firstValue) {
 		this.firstValue = firstValue;
+	}
+
+	public Match getMatchlazy() {
+		return matchlazy;
+	}
+
+	public void setMatchlazy(Match matchlazy) {
+		this.matchlazy = matchlazy;
 	}
 	
 	

@@ -106,13 +106,20 @@ public class OddService {
 		
 		Date now = new Date();
 		
+		List<Odd> odds = oddRepository.findByMatchAndForecastTypeOccurrence(match, fto);
 		Odd odd = new Odd();
-		odd.setFirstValue(value);
-		odd.setForecastTypeOccurrence(fto);
-		odd.setMatch(match);
-		odd.setDateCreated(now);
-		odd.setDateUpdated(now);
+		if(odds!=null && odds.size()>0)
+		{
+			odd = odds.get(0);
+		}else
+		{
+			odd.setForecastTypeOccurrence(fto);
+			odd.setMatch(match);
+			odd.setDateCreated(now);
+		}
 		
+		odd.setFirstValue(value);
+		odd.setDateUpdated(now);
 		oddRepository.save(odd);
 	}
 	
