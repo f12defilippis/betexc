@@ -34,7 +34,7 @@ public class BetstudyService extends CrawlerService{
 		ret.setSport("1");
 		ret.setSeason("1");
 
-		Document document = executeCall("https://www.statarea.com/predictions/date/2017-05-12/competition");
+		Document document = executeCall("http://www.betstudy.com/predictions/italy/serie-a/");
 
 		Elements rows = document.select("table[class^=soccer-table]").get(0).select("tr");
 		for(int i = 1 ; i < rows.size() ; i++)
@@ -129,9 +129,8 @@ public class BetstudyService extends CrawlerService{
 		}
 		return true;
 		
-		
-		
 	}
+
 	
 	
 	
