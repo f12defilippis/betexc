@@ -4,12 +4,14 @@ import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 
 @Entity
 public class Odd implements Serializable{
@@ -20,16 +22,14 @@ public class Odd implements Serializable{
 	@GeneratedValue(strategy = GenerationType.AUTO)	
 	private Integer id;
 	
+	
 	@ManyToOne
-    @JoinColumn(name = "match_id", referencedColumnName = "id", nullable = false)
+	@NotFound(action=NotFoundAction.IGNORE)
+    @JoinColumn(name = "match_id", referencedColumnName = "id")
 	private Match match;
+	
 
-	@ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name = "match_id", referencedColumnName = "id", nullable = false,  insertable=false, updatable=false)
-	private Match matchlazy;
-	
-	
-	
+
 	@ManyToOne
     @JoinColumn(name = "forecast_type_occurrence", referencedColumnName = "id", nullable = false)
 	private ForecastTypeOccurrence forecastTypeOccurrence;
@@ -86,14 +86,6 @@ public class Odd implements Serializable{
 
 	public void setFirstValue(double firstValue) {
 		this.firstValue = firstValue;
-	}
-
-	public Match getMatchlazy() {
-		return matchlazy;
-	}
-
-	public void setMatchlazy(Match matchlazy) {
-		this.matchlazy = matchlazy;
 	}
 	
 	

@@ -9,29 +9,27 @@ import java.util.Map;
 
 import javax.transaction.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.bonde.betbot.model.domain.FatMatch;
 import com.bonde.betbot.model.domain.Forecast;
 import com.bonde.betbot.model.domain.ForecastValue;
-import com.bonde.betbot.model.domain.Match;
 import com.bonde.betbot.model.domain.Odd;
 import com.bonde.betbot.model.domain.ValueBet;
+import com.bonde.betbot.model.dto.ValueBetKeyTO;
 import com.bonde.betbot.model.dto.ValueBetTO;
-import com.bonde.betbot.repository.ForecastRepository;
+import com.bonde.betbot.repository.FatMatchRepository;
 import com.bonde.betbot.repository.ForecastValueRepository;
-import com.bonde.betbot.repository.OddRepository;
 import com.bonde.betbot.repository.ValueBetRepository;
 import com.bonde.betbot.util.DateUtil;
 
 @Service
 public class ValueBetService {
-
-	@Autowired
-	private OddRepository oddRepository;
-
-	@Autowired
-	private ForecastRepository forecastRepository;
+	
+	protected final Logger log = LoggerFactory.getLogger(this.getClass()); 	
 	
 	@Autowired
 	private ForecastValueRepository forecastValueRepository;
@@ -39,37 +37,54 @@ public class ValueBetService {
 	@Autowired
 	private ValueBetRepository valueBetRepository;
 
+	@Autowired
+	private FatMatchRepository fatMatchRepository;
+	
+	
 	@Transactional
 	public int calculateValueBet(Date date)
 	{
 		int ret = 0;
-		List<Forecast> forecasts = forecastRepository.findByMatchlazyDateStartBetween(date,DateUtil.addDaysToDate(date, 1));
-		List<Odd> odds = oddRepository.findByMatchlazyDateStartBetween(date,DateUtil.addDaysToDate(date, 1));
+		
+		List<FatMatch> fatMatches = fatMatchRepository.findByDateStartBetween(date,DateUtil.addDaysToDate(date, 1));
 		
 		
+		Map<ValueBetKeyTO,ValueBetTO> map = new HashMap<ValueBetKeyTO,ValueBetTO>();
 		
-		Map<Match,ValueBetTO> map = new HashMap<Match,ValueBetTO>();
-		
-		
-		for(Odd odd : odds)
+		for(FatMatch fm : fatMatches)
 		{
-			odd = oddRepository.findOne(odd.getId());
-			ValueBetTO to = new ValueBetTO();
-			to.setOdd(odd);
-			
-			map.put(odd.getMatch(), to);
-		}
-
-		for(Forecast forecast : forecasts)
-		{
-			forecast = forecastRepository.findOne(forecast.getId());
-			if(map.get(forecast.getMatch())!=null)
+			for(Forecast forecast : fm.getForecasts())
 			{
-				map.get(forecast.getMatch()).setForecast(forecast);
+				ValueBetKeyTO key = new ValueBetKeyTO(fm.getId(),forecast.getSource().getId(),forecast.getForecastTypeOccurrence().getId());
+				if(map.get(key)!=null)
+				{
+					map.get(key).setForecast(forecast);
+				}else
+				{
+					ValueBetTO to = new ValueBetTO();
+					to.setForecast(forecast);
+					map.put(key, to);
+				}
+				log.info("NEW FORECAST: " + key.toString());
+			}
+			for(Odd odd : fm.getOdds())
+			{
+				for (Map.Entry<ValueBetKeyTO,ValueBetTO> entry : map.entrySet()) {
+					ValueBetKeyTO key = entry.getKey();
+					if(key.getMatchId().equals(fm.getId()) && key.getForecastTypeOccurrenceId().equals(odd.getForecastTypeOccurrence().getId()))
+					{
+						map.get(key).setOdd(odd);
+					}
+					System.out.println("MATCH:" + key.getMatchId().equals(fm.getId()) + " FOR: " + key.getForecastTypeOccurrenceId().equals(odd.getForecastTypeOccurrence().getId()));
+					System.out.println("MATCH:" + key.getMatchId() + " FM: " + fm.getId());
+				}
 			}
 		}
 
-		for (Map.Entry<Match,ValueBetTO> entry : map.entrySet()) {
+		
+		
+		
+		for (Map.Entry<ValueBetKeyTO,ValueBetTO> entry : map.entrySet()) {
 //			Match match = entry.getKey();
 			ValueBetTO to = entry.getValue();
 			Forecast forecast = to.getForecast();

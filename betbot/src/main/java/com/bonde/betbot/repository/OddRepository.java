@@ -1,6 +1,5 @@
 package com.bonde.betbot.repository;
 
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.repository.CrudRepository;
@@ -15,7 +14,6 @@ public interface OddRepository extends CrudRepository<Odd, Integer>{
 	List<Odd> findByMatchAndForecastTypeOccurrence(Match match, ForecastTypeOccurrence forecastTypeOccurrence);
 
 	
-	List<Odd> findByMatchlazyDateStartBetween(Date dateStart,Date dateEnd);
 	
 	
 }

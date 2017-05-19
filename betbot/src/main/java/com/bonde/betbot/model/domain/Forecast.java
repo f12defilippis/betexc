@@ -4,12 +4,14 @@ import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 
 @Entity
 public class Forecast implements Serializable{
@@ -21,6 +23,7 @@ public class Forecast implements Serializable{
 	private Integer id;
 	
 	@ManyToOne
+	@NotFound(action=NotFoundAction.IGNORE)
     @JoinColumn(name = "table_match", referencedColumnName = "id", nullable = false)
 	private Match match;
 
@@ -39,9 +42,6 @@ public class Forecast implements Serializable{
 	private Date dateCreated;
 	private Date dateUpdated;
 	
-	@ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name = "table_match", referencedColumnName = "id", nullable = false,  insertable=false, updatable=false)
-	private Match matchlazy;	
 	
 	public Date getDateCreated() {
 		return dateCreated;
@@ -100,13 +100,6 @@ public class Forecast implements Serializable{
 		this.forecastValue = forecastValue;
 	}
 
-	public Match getMatchlazy() {
-		return matchlazy;
-	}
-
-	public void setMatchlazy(Match matchlazy) {
-		this.matchlazy = matchlazy;
-	}
 	
 	
 
