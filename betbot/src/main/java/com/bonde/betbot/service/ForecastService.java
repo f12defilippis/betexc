@@ -18,12 +18,17 @@ import com.bonde.betbot.model.domain.Source;
 import com.bonde.betbot.model.dto.ForecastMatchRowTO;
 import com.bonde.betbot.model.dto.ForecastScan;
 import com.bonde.betbot.service.source.ScibetService;
+import com.bonde.betbot.service.source.ZulubetService;
 
 @Service
 public class ForecastService extends ForecastResultService{
 
 	@Autowired
 	ScibetService scibetService;
+	
+	@Autowired
+	ZulubetService zulubetService;
+
 	
 	
 	@Transactional
@@ -75,6 +80,30 @@ public class ForecastService extends ForecastResultService{
 	}
 
 	
+	@Transactional
+	public String getZulubetForecast(Date date)
+	{
+		try {
+			Date start = new Date();
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+			String strDate = format.format(date);
+			
+			log.info("Starting crawling matches from zulubet for date " + strDate);
+			ForecastScan scan = zulubetService.crawlForecast(date);
+			log.info("Finished crawling matches from zulubet. " + scan.getRows().size() + " matches found");
+			log.info("Starting saving forecast");
+			int matchSkipped = saveData(scan, date);
+			log.info("Finished saving forecast." + (scan.getRows().size() - matchSkipped) + " Matches Saved. " + matchSkipped + " Matches Skipped");
+			Date end = new Date();
+			
+			summaryService.saveSummary(new Source(Source.ZULUBET), new ScanType(ScanType.FORECAST), start, end, scan.getRows().size() - matchSkipped, scan.getRows().size(),date);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "KO";
+		}
+		return "OK";
+	}
+	
 	
 	
 	
@@ -89,7 +118,7 @@ public class ForecastService extends ForecastResultService{
 
 			if(match!=null)
 			{
-				//FORECAST
+				//FORECAST s
 				forecastManagement(row.getPred1(), match, source, new ForecastTypeOccurrence(ForecastTypeOccurrence.PRED1));
 				forecastManagement(row.getPredX(), match, source, new ForecastTypeOccurrence(ForecastTypeOccurrence.PREDX));
 				forecastManagement(row.getPred2(), match, source, new ForecastTypeOccurrence(ForecastTypeOccurrence.PRED2));

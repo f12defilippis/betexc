@@ -140,7 +140,7 @@ public class OddService {
 		
 		
 		//MATCH
-		List<Match> matchList = matchRepository.findByDateStartAndHomeTeamAndAwayTeam(date,homeTeam,awayTeam);
+		List<Match> matchList = matchRepository.findByDateStartAndHomeTeamAndAwayTeam(row.getMatchDate(),homeTeam,awayTeam);
 
 		Date now = new Date();
 		

@@ -73,6 +73,23 @@ public class BetbotController {
 		
 		return "OK!";
     }
+	
+	@RequestMapping("/scanzulubet")
+    private String scanzulubet(HttpServletRequest req, @RequestParam(value="date", defaultValue="World") String strdate) throws Exception{
+
+		SimpleDateFormat formatDateHour = new SimpleDateFormat("yyyy-MM-dd");
+		Date date;
+		try {
+			date = formatDateHour.parse(strdate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return null;
+		}		
+		
+		forecastService.getZulubetForecast(date);
+		
+		return "OK!";
+    }
 
 	
 	@RequestMapping("/allfromyearsc")
@@ -97,6 +114,7 @@ public class BetbotController {
 			
 			forecastService.getSciBetForecast(date);
 			resultService.getLivescoreResults(date);
+			oddService.getBettingTips1X2Odds(date);
 
 			log.info("*****************************");
 			log.info("*****************************");
