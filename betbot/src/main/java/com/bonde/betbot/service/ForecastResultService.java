@@ -28,6 +28,7 @@ import com.bonde.betbot.repository.TeamNameRepository;
 import com.bonde.betbot.repository.TeamRepository;
 import com.bonde.betbot.service.source.Livescore24Service;
 import com.bonde.betbot.service.source.StatareaService;
+import com.bonde.betbot.util.DateUtil;
 
 public abstract class ForecastResultService {
 
@@ -220,7 +221,7 @@ public abstract class ForecastResultService {
 //			matchList = matchRepository.findByDateStartAndHomeTeamAndAwayTeam(row.getDate(),homeTeam,awayTeam);
 //		}else
 //		{
-			matchList = matchRepository.findByDateStartBetweenAndHomeTeamAndAwayTeam(row.getDate(),homeTeam,awayTeam);
+			matchList = matchRepository.findByHomeTeamAndAwayTeamAndDateStartBetween(homeTeam,awayTeam,row.getDate(),DateUtil.addDaysToDate(row.getDate(), 1));
 //		}
 		
 		

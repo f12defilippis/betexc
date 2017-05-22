@@ -19,6 +19,7 @@ import com.bonde.betbot.model.dto.ForecastMatchRowTO;
 import com.bonde.betbot.model.dto.ForecastScan;
 import com.bonde.betbot.service.source.MyBetService;
 import com.bonde.betbot.service.source.PickForWinService;
+import com.bonde.betbot.service.source.ProSoccerService;
 import com.bonde.betbot.service.source.ScibetService;
 import com.bonde.betbot.service.source.VitibetService;
 import com.bonde.betbot.service.source.ZulubetService;
@@ -41,7 +42,36 @@ public class ForecastService extends ForecastResultService{
 	@Autowired
 	VitibetService vitibetService;
 
+	@Autowired
+	ProSoccerService proSoccerService;
 
+
+	@Transactional
+	public String getProSoccerForecast(Date date)
+	{
+		try {
+			Date start = new Date();
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+			String strDate = format.format(date);
+			
+			log.info("Starting crawling matches from prosoccer for date " + strDate);
+			ForecastScan scan = proSoccerService.crawlForecast(date);
+			scan.setCalculatehour(false);
+			log.info("Finished crawling matches from prosoccer. " + scan.getRows().size() + " matches found");
+			log.info("Starting saving forecast");
+			int matchSkipped = saveData(scan, date);
+			log.info("Finished saving forecast." + (scan.getRows().size() - matchSkipped) + " Matches Saved. " + matchSkipped + " Matches Skipped");
+			Date end = new Date();
+			
+			summaryService.saveSummary(new Source(Source.PROSOCCER), new ScanType(ScanType.FORECAST), start, end, scan.getRows().size() - matchSkipped, scan.getRows().size(),date);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "KO";
+		}
+		return "OK";
+	}	
+	
+	
 	@Transactional
 	public String getVitibetForecast(Date date)
 	{

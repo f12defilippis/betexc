@@ -41,7 +41,22 @@ public class BetbotController {
 	private TeamDiscoveryService teamDiscoveryService;
 
 	
-	
+	@RequestMapping("/scanprosoccer")
+    private String scanprosoccer(HttpServletRequest req, @RequestParam(value="date", defaultValue="World") String strdate) throws Exception{
+
+		SimpleDateFormat formatDateHour = new SimpleDateFormat("yyyy-MM-dd");
+		Date date;
+		try {
+			date = formatDateHour.parse(strdate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return null;
+		}		
+		
+		forecastService.getProSoccerForecast(date);
+		
+		return "OK!";
+    }	
 	
 	@RequestMapping("/scanstatarea")
     private String test(HttpServletRequest req, @RequestParam(value="date", defaultValue="World") String strdate) throws Exception{
@@ -109,8 +124,10 @@ public class BetbotController {
 		
 		SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
 		String strDatePickForWin = "2016/09/01";
+		String strDateProsoccer = "2016/09/02";
 		
 		Date datePickForWin = format.parse(strDatePickForWin);
+		Date dateProsoccer = format.parse(strDateProsoccer);
 		
 		while(date.before(new Date()))
 		{
@@ -129,6 +146,10 @@ public class BetbotController {
 			if(date.after(datePickForWin))
 			{
 				forecastService.getPickForWinForecast(date);
+			}
+			if(date.after(dateProsoccer))
+			{
+				forecastService.getProSoccerForecast(dateProsoccer);
 			}
 			
 			resultService.getLivescoreResults(date);

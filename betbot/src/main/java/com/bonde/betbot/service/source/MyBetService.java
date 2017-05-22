@@ -8,6 +8,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import com.bonde.betbot.model.domain.Source;
 import com.bonde.betbot.model.dto.ForecastMatchRowTO;
@@ -15,6 +16,7 @@ import com.bonde.betbot.model.dto.ForecastScan;
 import com.bonde.betbot.service.CrawlerService;
 import com.bonde.betbot.util.DateUtil;
 
+@Service
 public class MyBetService  extends CrawlerService{
 
 
