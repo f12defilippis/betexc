@@ -150,7 +150,7 @@ public class OddService {
 			match = matchList.get(0);
 		}else
 		{
-			match.setDateStart(date);
+			match.setDateStart(row.getMatchDate());
 			match.setHomeTeam(homeTeam);
 			match.setAwayTeam(awayTeam);
 

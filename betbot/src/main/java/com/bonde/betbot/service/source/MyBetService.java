@@ -38,7 +38,7 @@ public class MyBetService  extends CrawlerService{
 		ret.setSource(String.valueOf(Source.MYBET));
 		ret.setSport("1");
 		ret.setSeason("1");
-		Document document = executeCall("https://mybet.tips/soccer/predictions/" + finalDate + "/");
+		Document document = executeCall("http://mybet.tips/soccer/predictions/" + finalDate + "/");
 		
 //		Elements competitions = document.select("table[class^=content_table]");
 
