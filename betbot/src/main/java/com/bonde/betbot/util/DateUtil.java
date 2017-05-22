@@ -4,9 +4,33 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DateUtil {
 
+	public static Map<Integer,String> monthMap = new HashMap<Integer,String>();
+	static
+	{
+		monthMap.put(1, "January");
+		monthMap.put(2, "February");
+		monthMap.put(3, "March");
+		monthMap.put(4, "April");
+		monthMap.put(5, "May");
+		monthMap.put(6, "June");
+		monthMap.put(7, "July");
+		monthMap.put(8, "August");
+		monthMap.put(9, "September");
+		monthMap.put(10, "October");
+		monthMap.put(11, "November");
+		monthMap.put(12, "December");
+	};
+		
+	public static String getMonth(Integer month)
+	{
+		return monthMap.get(month);
+	}
+	
 	public static Date dateManagement(Date date, String hour)
 	{
 		SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");

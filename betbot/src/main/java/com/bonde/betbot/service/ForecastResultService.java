@@ -213,9 +213,18 @@ public abstract class ForecastResultService {
 //			matchList = matchRepository.findByDateStartAndHomeTeamAndAwayTeamAndCompetition(row.getDate(),homeTeam,awayTeam,competition);
 //		}else
 //		{
-			matchList = matchRepository.findByDateStartAndHomeTeamAndAwayTeam(row.getDate(),homeTeam,awayTeam);
 //		}
 
+//		if(scan.isCalculatehour())
+//		{
+//			matchList = matchRepository.findByDateStartAndHomeTeamAndAwayTeam(row.getDate(),homeTeam,awayTeam);
+//		}else
+//		{
+			matchList = matchRepository.findByDateStartBetweenAndHomeTeamAndAwayTeam(row.getDate(),homeTeam,awayTeam);
+//		}
+		
+		
+		
 		Match match = new Match();
 		if(matchList!=null && matchList.size()>0)
 		{
@@ -224,20 +233,23 @@ public abstract class ForecastResultService {
 			{
 				match.setCompetition(competition);
 			}
+			if(row.getResult()!=null)
+				match.setFinalScore(row.getResult());
+			if(row.getResultHT()!=null)
+				match.setHalftimeScore(row.getResultHT());
+			match.setDateUpdated(new Date());
+			matchRepository.save(match);
+			log.debug("MATCH UPDATED: " + row.getHomeTeam() + " - " + row.getAwayTeam());
 		}else
 		{
-			match.setDateStart(row.getDate());
-			match.setHomeTeam(homeTeam);
-			match.setAwayTeam(awayTeam);
-			match.setCompetition(competition);
-			match.setDateCreated(new Date());
+//			match.setDateStart(row.getDate());
+//			match.setHomeTeam(homeTeam);
+//			match.setAwayTeam(awayTeam);
+//			match.setCompetition(competition);
+//			match.setDateCreated(new Date());
+			log.debug("MATCH SKIPPED: " + row.getHomeTeam() + " - " + row.getAwayTeam());
+			return null;
 		}
-		if(row.getResult()!=null)
-			match.setFinalScore(row.getResult());
-		if(row.getResultHT()!=null)
-			match.setHalftimeScore(row.getResultHT());
-		match.setDateUpdated(new Date());
-		matchRepository.save(match);
 		return match;
 	}
 	

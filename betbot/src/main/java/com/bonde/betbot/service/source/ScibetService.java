@@ -28,7 +28,7 @@ public class ScibetService extends CrawlerService{
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		String strDate = format.format(date);
 		
-		
+		ret.setCalculatehour(false);
 		ret.setDatetime(new Date());
 		ret.setSource(String.valueOf(Source.SCIBET));
 		ret.setSport("1");

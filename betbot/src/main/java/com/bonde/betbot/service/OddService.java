@@ -159,6 +159,7 @@ public class OddService {
 			
 			
 			matchRepository.save(match);
+			log.debug("MATCH SAVED: " + row.getHomeTeam() + " - " + row.getAwayTeam());
 		}
 		return match;
 	}		
@@ -186,15 +187,10 @@ public class OddService {
 			
 			List<TeamName> listtname = teamNameRepository.findByName(t);
 			
-			if(listtname == null || listtname.size()==0)
-			{
-			}
-			
 			if(listtname != null && listtname.size()>0)
 			{
 				teamName = listtname.get(0);
 				team = teamName.getTeam();
-				
 				
 				Date now = new Date();
 				

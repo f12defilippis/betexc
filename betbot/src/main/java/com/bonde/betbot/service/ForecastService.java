@@ -17,7 +17,10 @@ import com.bonde.betbot.model.domain.ScanType;
 import com.bonde.betbot.model.domain.Source;
 import com.bonde.betbot.model.dto.ForecastMatchRowTO;
 import com.bonde.betbot.model.dto.ForecastScan;
+import com.bonde.betbot.service.source.MyBetService;
+import com.bonde.betbot.service.source.PickForWinService;
 import com.bonde.betbot.service.source.ScibetService;
+import com.bonde.betbot.service.source.VitibetService;
 import com.bonde.betbot.service.source.ZulubetService;
 
 @Service
@@ -29,6 +32,96 @@ public class ForecastService extends ForecastResultService{
 	@Autowired
 	ZulubetService zulubetService;
 
+	@Autowired
+	MyBetService myBetService;
+
+	@Autowired
+	PickForWinService pickForWinService;
+
+	@Autowired
+	VitibetService vitibetService;
+
+
+	@Transactional
+	public String getVitibetForecast(Date date)
+	{
+		try {
+			Date start = new Date();
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+			String strDate = format.format(date);
+			
+			log.info("Starting crawling matches from vitibet for date " + strDate);
+			ForecastScan scan = vitibetService.crawlForecast(date);
+			scan.setCalculatehour(false);
+			log.info("Finished crawling matches from vitibet. " + scan.getRows().size() + " matches found");
+			log.info("Starting saving forecast");
+			int matchSkipped = saveData(scan, date);
+			log.info("Finished saving forecast." + (scan.getRows().size() - matchSkipped) + " Matches Saved. " + matchSkipped + " Matches Skipped");
+			Date end = new Date();
+			
+			summaryService.saveSummary(new Source(Source.VITIBET), new ScanType(ScanType.FORECAST), start, end, scan.getRows().size() - matchSkipped, scan.getRows().size(),date);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "KO";
+		}
+		return "OK";
+	}	
+	
+	
+	
+	
+	@Transactional
+	public String getPickForWinForecast(Date date)
+	{
+		try {
+			Date start = new Date();
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+			String strDate = format.format(date);
+			
+			log.info("Starting crawling matches from pickforwin for date " + strDate);
+			ForecastScan scan = pickForWinService.crawlForecast(date);
+			scan.setCalculatehour(false);
+			log.info("Finished crawling matches from pickforwin. " + scan.getRows().size() + " matches found");
+			log.info("Starting saving forecast");
+			int matchSkipped = saveData(scan, date);
+			log.info("Finished saving forecast." + (scan.getRows().size() - matchSkipped) + " Matches Saved. " + matchSkipped + " Matches Skipped");
+			Date end = new Date();
+			
+			summaryService.saveSummary(new Source(Source.PICKFORWIN), new ScanType(ScanType.FORECAST), start, end, scan.getRows().size() - matchSkipped, scan.getRows().size(),date);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "KO";
+		}
+		return "OK";
+	}	
+	
+
+	@Transactional
+	public String getMyBetForecast(Date date)
+	{
+		try {
+			Date start = new Date();
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+			String strDate = format.format(date);
+			
+			log.info("Starting crawling matches from mybet for date " + strDate);
+			ForecastScan scan = myBetService.crawlForecast(date);
+			scan.setCalculatehour(false);
+			log.info("Finished crawling matches from mybet. " + scan.getRows().size() + " matches found");
+			log.info("Starting saving forecast");
+			int matchSkipped = saveData(scan, date);
+			log.info("Finished saving forecast." + (scan.getRows().size() - matchSkipped) + " Matches Saved. " + matchSkipped + " Matches Skipped");
+			Date end = new Date();
+			
+			summaryService.saveSummary(new Source(Source.MYBET), new ScanType(ScanType.FORECAST), start, end, scan.getRows().size() - matchSkipped, scan.getRows().size(),date);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "KO";
+		}
+		return "OK";
+	}	
+	
+	
 	
 	
 	@Transactional

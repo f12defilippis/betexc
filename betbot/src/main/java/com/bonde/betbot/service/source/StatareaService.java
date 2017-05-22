@@ -36,6 +36,7 @@ public class StatareaService extends CrawlerService{
 	{
 		ForecastScan ret = new ForecastScan();
 
+		ret.setCalculatehour(false);
 		ret.setDatetime(new Date());
 		ret.setSource("1");
 		ret.setSport("1");

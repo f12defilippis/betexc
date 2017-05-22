@@ -11,6 +11,8 @@ public class ForecastScan {
 	private String sport;
 	private String season;
 	
+	private boolean calculatehour = true;
+	
 	private List<ForecastMatchRowTO> rows;
 
 	public ForecastScan()
@@ -66,6 +68,18 @@ public class ForecastScan {
 
 	public void setSeason(String season) {
 		this.season = season;
+	}
+
+
+
+	public boolean isCalculatehour() {
+		return calculatehour;
+	}
+
+
+
+	public void setCalculatehour(boolean calculatehour) {
+		this.calculatehour = calculatehour;
 	}
 	
 	
