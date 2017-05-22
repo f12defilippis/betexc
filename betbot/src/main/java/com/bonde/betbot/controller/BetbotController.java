@@ -39,6 +39,9 @@ public class BetbotController {
 
 	@Autowired
 	private TeamDiscoveryService teamDiscoveryService;
+
+	
+	
 	
 	@RequestMapping("/scanstatarea")
     private String test(HttpServletRequest req, @RequestParam(value="date", defaultValue="World") String strdate) throws Exception{
@@ -102,7 +105,12 @@ public class BetbotController {
 		} catch (ParseException e) {
 			e.printStackTrace();
 			return null;
-		}		
+		}
+		
+		SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+		String strDatePickForWin = "2016/09/01";
+		
+		Date datePickForWin = format.parse(strDatePickForWin);
 		
 		while(date.before(new Date()))
 		{
@@ -112,9 +120,18 @@ public class BetbotController {
 			log.info("*****NEW DAY*****************");
 			
 			
-			forecastService.getSciBetForecast(date);
-			resultService.getLivescoreResults(date);
 			oddService.getBettingTips1X2Odds(date);
+			
+			forecastService.getSciBetForecast(date);
+			forecastService.getZulubetForecast(date);
+			forecastService.getMyBetForecast(date);
+
+			if(date.after(datePickForWin))
+			{
+				forecastService.getPickForWinForecast(date);
+			}
+			
+			resultService.getLivescoreResults(date);
 
 			log.info("*****************************");
 			log.info("*****************************");
