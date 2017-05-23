@@ -17,6 +17,7 @@ public class ForecastType implements Serializable{
 	public static final int UO35 = 5;
 	public static final int DC = 6;
 	public static final int DCHT = 7;
+	public static final int GNG = 8;
 	
 	@Id
 	private int id;

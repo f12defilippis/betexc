@@ -13,6 +13,10 @@ public class OddMatchRowTO implements Serializable{
 	private double odd1;
 	private double oddX;
 	private double odd2;
+	
+	private String competition;
+	
+	
 	public Date getMatchDate() {
 		return matchDate;
 	}
@@ -48,6 +52,12 @@ public class OddMatchRowTO implements Serializable{
 	}
 	public void setOdd2(double odd2) {
 		this.odd2 = odd2;
+	}
+	public String getCompetition() {
+		return competition;
+	}
+	public void setCompetition(String competition) {
+		this.competition = competition;
 	}
 
 	

@@ -41,7 +41,7 @@ public class BettingTips1X2Service extends CrawlerService{
 			Date matchDate = DateUtil.addHourToDateandAddHours(date, matchFields.get(2).text(),1);
 			
 			String separator = matchFields.get(3).text().split(" v ").length>1 ? " v " : " - ";
-			
+			String competition = matchFields.get(1).text();
 			String hour = matchFields.get(2).text();
 			String homeTeam = matchFields.get(3).text().split(separator)[0].trim();
 			String awayTeam = matchFields.get(3).text().split(separator)[1].trim();
@@ -57,6 +57,7 @@ public class BettingTips1X2Service extends CrawlerService{
 			row.setOdd1(odd1);
 			row.setOdd2(odd2);
 			row.setOddX(oddX);
+			row.setCompetition(competition);
 			
 			ret.add(row);
 		}

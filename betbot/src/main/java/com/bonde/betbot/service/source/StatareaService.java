@@ -178,7 +178,7 @@ public class StatareaService extends CrawlerService{
 				row.setHomeTeam(hostTeam);
 				row.setAwayTeam(guestTeam);
 				
-				row.setCompetition(competitionName);
+//				row.setCompetition(competitionName);
 				row.setCountry(countryName);
 				
 				ret.getRows().add(row);

@@ -38,6 +38,8 @@ public class ForecastTypeOccurrence implements Serializable
 	public static final int PREDX2HT = 17;
 	public static final int PRED12HT = 18;
 
+	public static final int GOAL = 19;
+	public static final int NOGOAL = 20;
 	
 	
 	@ManyToOne

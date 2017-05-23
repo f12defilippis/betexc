@@ -11,17 +11,23 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.bonde.betbot.model.domain.Competition;
 import com.bonde.betbot.model.domain.ForecastTypeOccurrence;
 import com.bonde.betbot.model.domain.Match;
 import com.bonde.betbot.model.domain.Odd;
 import com.bonde.betbot.model.domain.ScanType;
+import com.bonde.betbot.model.domain.Season;
 import com.bonde.betbot.model.domain.Source;
+import com.bonde.betbot.model.domain.Sport;
 import com.bonde.betbot.model.domain.Team;
 import com.bonde.betbot.model.domain.TeamName;
 import com.bonde.betbot.model.dto.OddMatchRowTO;
+import com.bonde.betbot.repository.CompetitionRepository;
 import com.bonde.betbot.repository.MatchRepository;
 import com.bonde.betbot.repository.OddRepository;
+import com.bonde.betbot.repository.SeasonRepository;
 import com.bonde.betbot.repository.SourceRepository;
+import com.bonde.betbot.repository.SportRepository;
 import com.bonde.betbot.repository.TeamNameRepository;
 import com.bonde.betbot.service.source.BettingTips1X2Service;
 
@@ -48,6 +54,15 @@ public class OddService {
 	@Autowired
 	SummaryService summaryService;	
 	
+	@Autowired
+	CompetitionRepository competitionRepository;
+	
+	@Autowired
+	SportRepository sportRepository;
+
+	@Autowired
+	SeasonRepository seasonRepository;
+
 	
 	@Transactional
 	public String getBettingTips1X2Odds(Date date)
@@ -128,13 +143,38 @@ public class OddService {
 	public Match saveMatchData(OddMatchRowTO row, Date date, Source source)
 	{
 
+		Sport sport = sportRepository.findOne(1);
+		Season season = seasonRepository.findOne(1);
+		Competition competition = null;
+		
+		if(row.getCompetition()!=null)
+		{
+			//COMPETITION
+			List<Competition> complist = competitionRepository.findByDescriptionAndSportAndSeason(row.getCompetition(), sport, season);
+			if(complist!=null && complist.size()>0)
+			{
+				competition = complist.get(0);
+			}
+			else
+			{
+				competition = new Competition();
+				competition.setDescription(row.getCompetition());
+				competition.setSeason(season);
+				competition.setSport(sport);
+				competition.setDateCreated(new Date());
+				competition.setDateUpdated(new Date());
+				competitionRepository.save(competition);
+			}
+		}		
+		
+		
 		//TEAM
 		Team homeTeam = teamManagement(row.getHomeTeam(), source);
 		Team awayTeam = teamManagement(row.getAwayTeam(), source);
 		
 		if(homeTeam == null || awayTeam == null)
 		{
-			log.debug("MATCH SKIPPED: " + row.getHomeTeam() + " - " + row.getAwayTeam());
+			log.debug("MATCH SKIPPED: + " + row.getCompetition() + " : "+ row.getHomeTeam() + " - " + row.getAwayTeam());
 			return null;
 		}
 		
@@ -156,7 +196,7 @@ public class OddService {
 
 			match.setDateCreated(now);
 			match.setDateUpdated(now);
-			
+			match.setCompetition(competition);
 			
 			matchRepository.save(match);
 			log.debug("MATCH SAVED: " + row.getHomeTeam() + " - " + row.getAwayTeam());

@@ -25,7 +25,7 @@ public class PickForWinService  extends CrawlerService{
 	{
 		ForecastScan ret = new ForecastScan();
 
-		SimpleDateFormat format = new SimpleDateFormat("MM-dd-yyyy");
+		SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
 		String strDate = format.format(date);
 		
 		ret.setCalculatehour(false);
@@ -74,6 +74,9 @@ public class PickForWinService  extends CrawlerService{
 			}catch(StringIndexOutOfBoundsException ex)
 			{
 				log.warn("NumberFormatException during read match row: " + ex.getMessage());
+			}catch(IndexOutOfBoundsException ex)
+			{
+				log.warn("IndexOutOfBoundsException during read match row: " + ex.getMessage());
 			}
 		}
 		return ret;

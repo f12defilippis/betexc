@@ -108,6 +108,42 @@ public class BetbotController {
 		
 		return "OK!";
     }
+	
+	@RequestMapping("/scanpick")
+    private String scanpick(HttpServletRequest req, @RequestParam(value="date", defaultValue="World") String strdate) throws Exception{
+
+		SimpleDateFormat formatDateHour = new SimpleDateFormat("yyyy-MM-dd");
+		Date date;
+		try {
+			date = formatDateHour.parse(strdate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return null;
+		}		
+		
+		oddService.getBettingTips1X2Odds(date);
+		forecastService.getPickForWinForecast(date);
+		
+		return "OK!";
+    }
+	
+	@RequestMapping("/scanvitibet")
+    private String scanvitibet(HttpServletRequest req, @RequestParam(value="date", defaultValue="World") String strdate) throws Exception{
+
+		SimpleDateFormat formatDateHour = new SimpleDateFormat("yyyy-MM-dd");
+		Date date;
+		try {
+			date = formatDateHour.parse(strdate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return null;
+		}		
+		
+		oddService.getBettingTips1X2Odds(date);
+		forecastService.getVitibetForecast(date);
+		
+		return "OK!";
+    }
 
 	
 	@RequestMapping("/allfromyearsc")
