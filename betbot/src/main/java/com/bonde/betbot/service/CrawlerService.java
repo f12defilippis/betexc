@@ -9,7 +9,7 @@ public abstract class CrawlerService {
 	protected Document executeCall(String requestString) throws Exception
 	{
 		Response doc = Jsoup
-				.connect(requestString)
+				.connect(requestString).validateTLSCertificates(false)
 				.header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
 				.header("Accept-Encoding", "gzip, deflate")
 				.header("Connection", "keep-alive")
