@@ -66,7 +66,7 @@ public class AsyncService {
 			}
 			if(date.after(dateProsoccer))
 			{
-				forecastService.getProSoccerForecast(dateProsoccer);
+				forecastService.getProSoccerForecast(date);
 			}
 			
 			resultService.getLivescoreResults(date);
@@ -85,6 +85,56 @@ public class AsyncService {
 		
 		return "OK!";
     }
+	
+
+	
+	@Async
+    public String prosoccerbulk(String strdate) throws Exception{
+
+		SimpleDateFormat formatDateHour = new SimpleDateFormat("yyyy-MM-dd");
+		Date date;
+		try {
+			date = formatDateHour.parse(strdate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return null;
+		}
+		
+		SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+		String strDateProsoccer = "2016/09/02";
+		
+		Date dateProsoccer = format.parse(strDateProsoccer);
+		
+		while(date.before(new Date()))
+		{
+			
+			log.info("*****************************");
+			log.info("*****************************");
+			log.info("*****NEW DAY*****************");
+			
+			
+			if(date.after(dateProsoccer))
+			{
+				forecastService.getProSoccerForecast(date);
+			}
+			
+
+			log.info("*****************************");
+			log.info("*****************************");
+			
+			
+			date = DateUtil.addDaysToDate(date, 1);
+			
+		}
+		
+
+		
+		
+		
+		return "OK!";
+    }
+	
+	
 	
 	
 	

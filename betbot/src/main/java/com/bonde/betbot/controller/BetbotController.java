@@ -157,6 +157,15 @@ public class BetbotController {
 		return "OK!";
     }
 	
+	@RequestMapping("/prosoccerbulk")
+    private String prosoccerbulk(HttpServletRequest req, @RequestParam(value="date", defaultValue="World") String strdate) throws Exception{
+
+		asyncService.prosoccerbulk(strdate);
+		
+		return "OK!";
+    }	
+	
+	
 	
 	
 	@RequestMapping("/scanresults")
