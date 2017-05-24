@@ -34,8 +34,9 @@ public class Livescore24Service extends CrawlerService{
 		ret.setSport("1");
 		ret.setSeason("1");
 		Document document = executeCall("http://www.livescore24.it/Calcio/risultati/" + strDate+ "");
-				
-		Elements competitions = document.select("table[class^=table table-primary table-livescore]");
+		log.info(document.toString());		
+		Elements competitions = document.select("table[class=table table-primary table-livescore]");
+//		Elements competitions = document.select("div[class=box-tournament]");
 
 		for(Element competitionMatches : competitions)
 		{
