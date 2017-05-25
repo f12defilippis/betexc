@@ -20,11 +20,11 @@ public class ValueBet implements Serializable{
 	private Integer id;
 
 	@ManyToOne
-    @JoinColumn(name = "odd", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "odd_id", referencedColumnName = "id", nullable = false)
 	private Odd odd;
 
 	@ManyToOne
-    @JoinColumn(name = "forecast", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "forecast_id", referencedColumnName = "id", nullable = false)
 	private Forecast forecast;
 	
 	@ManyToOne

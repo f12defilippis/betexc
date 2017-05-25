@@ -27,6 +27,9 @@ public class AsyncService {
 	@Autowired
 	private OddService oddService;	
 
+	@Autowired
+	private ValueBetService valueBetService;	
+
 	@Async
     public String allfromyear(String strdate) throws Exception{
 
@@ -133,6 +136,42 @@ public class AsyncService {
 		
 		return "OK!";
     }
+	
+	@Async
+    public String valuebetbulk(String strdate) throws Exception{
+
+		SimpleDateFormat formatDateHour = new SimpleDateFormat("yyyy-MM-dd");
+		Date date;
+		try {
+			date = formatDateHour.parse(strdate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return null;
+		}
+		
+		while(date.before(new Date()))
+		{
+			
+			log.info("*****************************");
+			log.info("*****************************");
+			log.info("*****NEW DAY*****************");
+
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+			String strDate = format.format(date);
+			
+			log.info("Starting calculating value bets for date " + strDate);
+			
+			int ret = valueBetService.calculateValueBet(date);
+
+			log.info("Calculated " + ret + " ValueBets for date: " + strdate);			
+			log.info("*****************************");
+			log.info("*****************************");
+			
+			date = DateUtil.addDaysToDate(date, 1);
+		}
+		
+		return "OK!";
+    }	
 	
 	
 	

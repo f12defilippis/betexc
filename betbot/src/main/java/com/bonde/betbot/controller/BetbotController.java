@@ -221,6 +221,13 @@ public class BetbotController {
 		return "OK!";
     }		
 	
+	@RequestMapping("/scanvaluebetbulk")
+    private String scanvaluebetbulk(HttpServletRequest req, @RequestParam(value="date", defaultValue="World") String strdate) throws Exception{
+
+		asyncService.valuebetbulk(strdate);
+		
+		return "OK!";
+    }		
 	
 	
 	
