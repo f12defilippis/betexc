@@ -3,6 +3,8 @@ package com.bonde.betbot.model.domain;
 import java.io.Serializable;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -17,8 +19,12 @@ public class ValueGroup implements Serializable{
 	private ValueGroupType valueGroupType;
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)	
 	private int id;
 	private String description;
+	
+	private double minimumValue;
+	private double maximumValue;
 	
 	
 	public int getId() {
@@ -43,6 +49,20 @@ public class ValueGroup implements Serializable{
 	public void setValueGroupType(ValueGroupType valueGroupType) {
 		this.valueGroupType = valueGroupType;
 	}
+	public double getMinimumValue() {
+		return minimumValue;
+	}
+	public void setMinimumValue(double minimumValue) {
+		this.minimumValue = minimumValue;
+	}
+	public double getMaximumValue() {
+		return maximumValue;
+	}
+	public void setMaximumValue(double maximumValue) {
+		this.maximumValue = maximumValue;
+	}
+
+
 	
 
 	
