@@ -151,21 +151,25 @@ public class AsyncService {
 		
 		while(date.before(new Date()))
 		{
-			
 			log.info("*****************************");
 			log.info("*****************************");
 			log.info("*****NEW DAY*****************");
 
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 			String strDate = format.format(date);
-			
-			log.info("Starting calculating value bets for date " + strDate);
-			
-			int ret = valueBetService.calculateValueBet(date);
+			try{
+				
+				log.info("Starting calculating value bets for date " + strDate);
+				
+				int ret = valueBetService.calculateValueBet(date);
 
-			log.info("Calculated " + ret + " ValueBets for date: " + strdate);			
-			log.info("*****************************");
-			log.info("*****************************");
+				log.info("Calculated " + ret + " ValueBets for date: " + strdate);			
+				log.info("*****************************");
+				log.info("*****************************");
+			}catch(Exception e)
+			{
+				log.warn("Exception occurred calculating value bets for date " + strDate + ":" + e.getMessage());
+			}
 			
 			date = DateUtil.addDaysToDate(date, 1);
 		}
