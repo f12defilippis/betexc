@@ -12,7 +12,7 @@ import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 
 import com.bonde.betbot.model.dto.OddMatchRowTO;
-import com.bonde.betbot.service.CrawlerService;
+import com.bonde.betbot.service.datacollection.CrawlerService;
 import com.bonde.betbot.util.DateUtil;
 
 @Service

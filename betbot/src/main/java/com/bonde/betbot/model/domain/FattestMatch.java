@@ -16,7 +16,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="table_match")
-public class FatMatch implements Serializable{
+public class FattestMatch implements Serializable{
 
 	private static final long serialVersionUID = 1869459056351802363L;
 
@@ -43,18 +43,13 @@ public class FatMatch implements Serializable{
 	
 	private Date dateCreated;
 	private Date dateUpdated;
+		
 	
 	@OneToMany(mappedBy = "match", cascade = CascadeType.ALL)
-	private Set<Odd> odds;
-	
-	
-	@OneToMany(mappedBy = "match", cascade = CascadeType.ALL)
-	private Set<Forecast> forecasts;
+	private Set<FatForecast> forecasts;
 
-	
-	
-	
-	
+	@OneToMany(mappedBy = "match", cascade = CascadeType.ALL)
+	private Set<Result> results;
 	
 	
 	public Date getDateCreated() {
@@ -133,7 +128,7 @@ public class FatMatch implements Serializable{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		FatMatch other = (FatMatch) obj;
+		FattestMatch other = (FattestMatch) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;
@@ -142,20 +137,20 @@ public class FatMatch implements Serializable{
 		return true;
 	}
 
-	public Set<Odd> getOdds() {
-		return odds;
-	}
-
-	public void setOdds(Set<Odd> odds) {
-		this.odds = odds;
-	}
-
-	public Set<Forecast> getForecasts() {
+	public Set<FatForecast> getForecasts() {
 		return forecasts;
 	}
 
-	public void setForecasts(Set<Forecast> forecasts) {
+	public void setForecasts(Set<FatForecast> forecasts) {
 		this.forecasts = forecasts;
+	}
+
+	public Set<Result> getResults() {
+		return results;
+	}
+
+	public void setResults(Set<Result> results) {
+		this.results = results;
 	}
 	
 	

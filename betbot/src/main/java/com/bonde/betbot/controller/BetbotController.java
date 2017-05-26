@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bonde.betbot.service.AsyncService;
-import com.bonde.betbot.service.ForecastService;
-import com.bonde.betbot.service.OddService;
-import com.bonde.betbot.service.ResultService;
-import com.bonde.betbot.service.TeamDiscoveryService;
-import com.bonde.betbot.service.ValueBetService;
+import com.bonde.betbot.service.datacollection.ForecastService;
+import com.bonde.betbot.service.datacollection.OddService;
+import com.bonde.betbot.service.datacollection.ResultService;
+import com.bonde.betbot.service.datacollection.TeamDiscoveryService;
+import com.bonde.betbot.service.datacollection.ValueBetService;
 
 @RestController
 public class BetbotController {

@@ -10,6 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import com.bonde.betbot.service.datacollection.ForecastService;
+import com.bonde.betbot.service.datacollection.OddService;
+import com.bonde.betbot.service.datacollection.ResultService;
+import com.bonde.betbot.service.datacollection.ValueBetService;
 import com.bonde.betbot.util.DateUtil;
 
 @Service

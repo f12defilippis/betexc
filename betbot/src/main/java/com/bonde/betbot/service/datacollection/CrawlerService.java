@@ -1,4 +1,4 @@
-package com.bonde.betbot.service;
+package com.bonde.betbot.service.datacollection;
 
 import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;

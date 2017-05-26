@@ -1,4 +1,4 @@
-package com.bonde.betbot.service;
+package com.bonde.betbot.service.datacollection;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;

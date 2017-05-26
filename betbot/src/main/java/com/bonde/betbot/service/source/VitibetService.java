@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import com.bonde.betbot.model.domain.Source;
 import com.bonde.betbot.model.dto.ForecastMatchRowTO;
 import com.bonde.betbot.model.dto.ForecastScan;
-import com.bonde.betbot.service.CrawlerService;
+import com.bonde.betbot.service.datacollection.CrawlerService;
 
 @Service
 public class VitibetService extends CrawlerService{

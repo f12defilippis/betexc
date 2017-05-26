@@ -32,6 +32,13 @@ public class Competition implements Serializable{
 	private Date dateCreated;
 	private Date dateUpdated;
 	
+	public Competition() {
+	}
+
+	public Competition(Integer pid) {
+		id = pid;
+	}
+
 	public Date getDateCreated() {
 		return dateCreated;
 	}
@@ -79,6 +86,31 @@ public class Competition implements Serializable{
 
 	public void setSeason(Season season) {
 		this.season = season;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Competition other = (Competition) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		return true;
 	}
 	
 	

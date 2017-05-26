@@ -25,6 +25,12 @@ public class ValueGroup implements Serializable{
 	
 	private double minimumValue;
 	private double maximumValue;
+
+	public ValueGroup(){}
+	
+	public ValueGroup(Integer pid){
+		id = pid;
+	}
 	
 	
 	public int getId() {

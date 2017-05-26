@@ -19,7 +19,7 @@ import com.bonde.betbot.model.dto.ForecastMatchRowTO;
 import com.bonde.betbot.model.dto.ForecastScan;
 import com.bonde.betbot.repository.TeamNameRepository;
 import com.bonde.betbot.repository.TeamRepository;
-import com.bonde.betbot.service.CrawlerService;
+import com.bonde.betbot.service.datacollection.CrawlerService;
 import com.bonde.betbot.util.DateUtil;
 
 @Service

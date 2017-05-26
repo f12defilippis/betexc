@@ -1,4 +1,4 @@
-package com.bonde.betbot.service;
+package com.bonde.betbot.service.datacollection;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
