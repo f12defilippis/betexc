@@ -2,6 +2,8 @@ package com.bonde.betbot.service;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,48 +27,49 @@ public class ValueGroupService {
 	@Autowired
 	private ForecastValueGroupRepository forecastValueGroupRepository;
 
-	
+	@Transactional
 	public void fillValueGroup()
 	{
 		
 
-		for(double i = -1 ; i < 1 ; i = i + 0.1)
+		for(double i = -100 ; i < 100 ; i = i + 10)
 		{
-			String threshold = "from " + (i+0.01) + " to " + (i+0.1);
+			String threshold = "from " + (i+1) + " to " + (i+10);
+			System.out.println("from " + (i+1) + " to " + (i+10));;
 	
 			ValueGroup vg = new ValueGroup();
 			vg.setValueGroupType(new ValueGroupType(ValueGroupType.T10));
 			vg.setDescription(threshold);
-			vg.setMinimumValue(i+0.01);
-			vg.setMaximumValue(i+0.1);
+			vg.setMinimumValue((i+1)/100);
+			vg.setMaximumValue((i+10)/100);
 			valueGroupRepository.save(vg);
 		}
 
-		for(double i = -1 ; i < 1 ; i = i + 0.05)
+		for(double i = -100 ; i < 100 ; i = i + 5)
 		{
-			String threshold = "from " + (i+0.01) + " to " + (i+0.05);
+			String threshold = "from " + (i+1) + " to " + (i+5);
 	
 			ValueGroup vg = new ValueGroup();
 			vg.setValueGroupType(new ValueGroupType(ValueGroupType.T5));
 			vg.setDescription(threshold);
-			vg.setMinimumValue(i+0.01);
-			vg.setMaximumValue(i+0.05);
+			vg.setMinimumValue((i+1)/100);
+			vg.setMaximumValue((i+5)/100);
 			valueGroupRepository.save(vg);
 		}
 
-		for(double i = -1 ; i < 1 ; i = i + 0.02)
+		for(double i = -100 ; i < 100 ; i = i + 2)
 		{
-			String threshold = "from " + (i+0.01) + " to " + (i+0.02);
+			String threshold = "from " + (i+1) + " to " + (i+2);
 	
 			ValueGroup vg = new ValueGroup();
 			vg.setValueGroupType(new ValueGroupType(ValueGroupType.T2));
 			vg.setDescription(threshold);
-			vg.setMinimumValue(i+0.01);
-			vg.setMaximumValue(i+0.02);
+			vg.setMinimumValue((i+1)/100);
+			vg.setMaximumValue((i+2)/100);
 			valueGroupRepository.save(vg);
 		}
 
-		List<ForecastValue> listFv = forecastValueRepository.findAllOrderByValue();
+		List<ForecastValue> listFv = forecastValueRepository.findAllByOrderByValueAsc();
 
 		for(ForecastValue fv : listFv)
 		{

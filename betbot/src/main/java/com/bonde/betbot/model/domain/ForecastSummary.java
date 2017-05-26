@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.bonde.betbot.util.DateUtil;
+
 @Entity
 public class ForecastSummary implements Serializable{
 
@@ -125,6 +127,45 @@ public class ForecastSummary implements Serializable{
 	public void setForecastTypeOccurrence(
 			ForecastTypeOccurrence forecastTypeOccurrence) {
 		this.forecastTypeOccurrence = forecastTypeOccurrence;
+	}
+	@Override
+	public String toString() {
+		return "ForecastSummary [id=" + id + ", finalDate=" + DateUtil.fromDateToString(finalDate)
+				+ ", daysBefore=" + daysBefore + ", source=" + source.getDescription()
+				+ ", forecastValue=" + getForecastValueDescription(forecastValue) + ", valueGroup="
+				+ getValueGroupDescription(valueGroup) + ", valueBet=" + getForecastValueDescription(valueBet) + ", valueBetGroup="
+				+ getValueGroupDescription(valueBetGroup) + ", competition=" + getCompetitionDescription(competition)
+				+ ", forecastTypeOccurrence=" + getForecastTypeOccurrenceDescription(forecastTypeOccurrence)
+				+ ", numVerified=" + numVerified + ", numOccurrences="
+				+ numOccurrences + "]";
+	}
+	
+	private String getForecastValueDescription(ForecastValue fv)
+	{
+		if(fv!=null)
+			return String.valueOf(fv.getValue());
+		return null;
+	}
+	
+	private String getValueGroupDescription(ValueGroup fv)
+	{
+		if(fv!=null)
+			return fv.getDescription();
+		return null;
+	}	
+	
+	private String getCompetitionDescription(Competition fv)
+	{
+		if(fv!=null)
+			return fv.getDescription();
+		return null;
+	}
+	
+	private String getForecastTypeOccurrenceDescription(ForecastTypeOccurrence fv)
+	{
+		if(fv!=null)
+			return fv.getDescription();
+		return null;
 	}
 	
 	

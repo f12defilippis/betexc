@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bonde.betbot.service.AsyncService;
+import com.bonde.betbot.service.BestValueFinderService;
+import com.bonde.betbot.service.ValueGroupService;
 import com.bonde.betbot.service.datacollection.ForecastService;
 import com.bonde.betbot.service.datacollection.OddService;
 import com.bonde.betbot.service.datacollection.ResultService;
@@ -42,6 +44,31 @@ public class BetbotController {
 
 	@Autowired
 	private AsyncService asyncService;
+
+	@Autowired
+	private ValueGroupService valueGroupService;
+
+	@Autowired
+	private BestValueFinderService bestValueFinderService;
+	
+	
+	@RequestMapping("/fillValueGroup")
+    private String fillValueGroup() throws Exception{
+
+		
+		valueGroupService.fillValueGroup();
+		
+		return "OK!";
+    }	
+
+	@RequestMapping("/forsummary")
+    private String forsummary(HttpServletRequest req, @RequestParam(value="date", defaultValue="World") String strdate) throws Exception{
+
+		asyncService.forsummary(strdate);
+		
+		return "OK!";
+    }	
+	
 	
 	
 	@RequestMapping("/scanprosoccer")

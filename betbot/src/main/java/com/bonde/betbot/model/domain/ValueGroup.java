@@ -23,8 +23,8 @@ public class ValueGroup implements Serializable{
 	private int id;
 	private String description;
 	
-	private double minimumValue;
-	private double maximumValue;
+	private Double minimumValue;
+	private Double maximumValue;
 
 	public ValueGroup(){}
 	
@@ -55,18 +55,23 @@ public class ValueGroup implements Serializable{
 	public void setValueGroupType(ValueGroupType valueGroupType) {
 		this.valueGroupType = valueGroupType;
 	}
-	public double getMinimumValue() {
+
+	public Double getMinimumValue() {
 		return minimumValue;
 	}
-	public void setMinimumValue(double minimumValue) {
+
+	public void setMinimumValue(Double minimumValue) {
 		this.minimumValue = minimumValue;
 	}
-	public double getMaximumValue() {
+
+	public Double getMaximumValue() {
 		return maximumValue;
 	}
-	public void setMaximumValue(double maximumValue) {
+
+	public void setMaximumValue(Double maximumValue) {
 		this.maximumValue = maximumValue;
 	}
+
 
 
 	

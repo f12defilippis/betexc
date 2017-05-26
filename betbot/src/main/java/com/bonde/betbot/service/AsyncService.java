@@ -4,11 +4,14 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.bonde.betbot.service.datacollection.ForecastService;
 import com.bonde.betbot.service.datacollection.OddService;
@@ -34,6 +37,50 @@ public class AsyncService {
 	@Autowired
 	private ValueBetService valueBetService;	
 
+	@Autowired
+	private BestValueFinderService bestValueFinderService;	
+	
+	
+	
+	@Async
+    public String forsummary(String strdate) throws Exception{
+
+		SimpleDateFormat formatDateHour = new SimpleDateFormat("yyyy-MM-dd");
+		Date date;
+		try {
+			date = formatDateHour.parse(strdate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return null;
+		}		
+		
+		while(date.before(new Date()))
+		{
+			
+			log.info("*****************************");
+			log.info("*****************************");
+			log.info("*****NEW DAY*****************");
+			
+			
+			bestValueFinderService.calculateAdjustment(date);
+			
+
+			log.info("*****************************");
+			log.info("*****************************");
+			
+			
+			date = DateUtil.addDaysToDate(date, 1);
+			
+		}		
+		
+		
+		
+		
+		return "OK!";
+    }		
+	
+	
+	
 	@Async
     public String allfromyear(String strdate) throws Exception{
 

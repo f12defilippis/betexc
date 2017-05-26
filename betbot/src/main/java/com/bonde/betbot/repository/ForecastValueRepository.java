@@ -10,7 +10,7 @@ public interface ForecastValueRepository extends CrudRepository<ForecastValue, I
 
 	List<ForecastValue> findByValue(double value);
 
-	List<ForecastValue> findAllOrderByValue();
+	List<ForecastValue> findAllByOrderByValueAsc();
 
 
 }

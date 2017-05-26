@@ -48,6 +48,11 @@ public class AdjustmentValueTO implements Serializable{
 			eventsNotVerified++;
 		}
 	}
+	@Override
+	public String toString() {
+		return "AdjustmentValueTO [eventsVerified=" + eventsVerified
+				+ ", eventsNotVerified=" + eventsNotVerified + "]";
+	}
 	
 	
 	

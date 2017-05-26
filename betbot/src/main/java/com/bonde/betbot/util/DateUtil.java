@@ -50,6 +50,14 @@ public class DateUtil {
 	}		
 	
 	
+	public static String fromDateToString(Date date)
+	{
+		SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+		String strDate = format.format(date);		
+		return strDate;
+	}
+	
+	
 	public static Date addHourToDateandAddHours(Date date, String hour, int howManyHours)
 	{
 		SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
