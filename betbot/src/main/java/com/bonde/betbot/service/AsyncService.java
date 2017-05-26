@@ -4,14 +4,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.bonde.betbot.service.datacollection.ForecastService;
 import com.bonde.betbot.service.datacollection.OddService;
@@ -69,7 +66,7 @@ public class AsyncService {
 			log.info("*****************************");
 			
 			
-			date = DateUtil.addDaysToDate(date, 1);
+			date = DateUtil.addDaysToDate(date, 7);
 			
 		}		
 		
