@@ -104,7 +104,7 @@ public class ValueBetService {
 				df.setRoundingMode(RoundingMode.CEILING);			
 				
 				double oddForecast = Double.valueOf(df.format(1/oddValue).replace(",", "."));
-				double oddMargin = Double.valueOf(df.format(forecastValue-oddForecast).replace(",", "."));
+				double oddMargin = Double.valueOf(df.format((forecastValue-oddForecast)/oddForecast).replace(",", "."));
 				List<ForecastValue> fvlist = forecastValueRepository.findByValue(oddMargin);			
 
 				ForecastValue margin = new ForecastValue();
@@ -113,7 +113,7 @@ public class ValueBetService {
 					margin = fvlist.get(0);
 				}else
 				{
-					margin.setValue(forecastValue-oddForecast);
+					margin.setValue(oddMargin);
 					forecastValueRepository.save(margin);
 				}
 				

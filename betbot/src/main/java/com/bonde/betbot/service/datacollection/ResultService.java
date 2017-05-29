@@ -2,6 +2,9 @@ package com.bonde.betbot.service.datacollection;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.transaction.Transactional;
 
@@ -90,15 +93,27 @@ public class ResultService extends ForecastResultService{
 			{
 				Source source = sourceRepository.findOne(Integer.parseInt(scan.getSource()));
 				Match match = saveMatchData(row, scan, date, source);
+				List<Result> matchResults = resultRepository.findByMatch(match);
+				Map<Integer,Integer> forecastTypeMap = new HashMap<Integer,Integer>();
+
+				if(matchResults!=null && matchResults.size()>0)
+				{
+					for(Result res : matchResults)
+					{
+						forecastTypeMap.put(Integer.valueOf(res.getForecastTypeOccurrence().getForecastType().getId()), Integer.valueOf(res.getForecastTypeOccurrence().getForecastType().getId()));
+					}
+				}
+				
+				
 				if(match!=null && row.getResult()!=null && !row.getResult().trim().equals("-"))
 				{
-					saveResult(ForecastType.PRED1X2, row.getResult(), row.getResultHT(), match);
-					saveResult(ForecastType.PRED1X2HT, row.getResult(), row.getResultHT(), match);
-					saveResult(ForecastType.UO15, row.getResult(), row.getResultHT(), match);
-					saveResult(ForecastType.UO25, row.getResult(), row.getResultHT(), match);
-					saveResult(ForecastType.UO35, row.getResult(), row.getResultHT(), match);
-					saveResult(ForecastType.DC, row.getResult(), row.getResultHT(), match);
-					saveResult(ForecastType.DCHT, row.getResult(), row.getResultHT(), match);
+					saveResult(ForecastType.PRED1X2, row.getResult(), row.getResultHT(), match,forecastTypeMap);
+					saveResult(ForecastType.PRED1X2HT, row.getResult(), row.getResultHT(), match,forecastTypeMap);
+					saveResult(ForecastType.UO15, row.getResult(), row.getResultHT(), match,forecastTypeMap);
+					saveResult(ForecastType.UO25, row.getResult(), row.getResultHT(), match,forecastTypeMap);
+					saveResult(ForecastType.UO35, row.getResult(), row.getResultHT(), match,forecastTypeMap);
+					saveResult(ForecastType.DC, row.getResult(), row.getResultHT(), match,forecastTypeMap);
+					saveResult(ForecastType.DCHT, row.getResult(), row.getResultHT(), match,forecastTypeMap);
 				}else
 				{
 					matchSkipped++;
@@ -114,8 +129,15 @@ public class ResultService extends ForecastResultService{
 
 	}
 
-	public void saveResult(int forecastType, String result, String resultht, Match match)
+	public void saveResult(int forecastType, String result, String resultht, Match match, Map<Integer,Integer> forecastTypeMap)
 	{
+		
+		if(forecastTypeMap.get(Integer.valueOf(forecastType))!=null)
+		{
+			log.debug("Result yet saved... Skipping record. FT: " + forecastType + " Match: " + match.getHomeTeam().getName() + " - " + match.getAwayTeam().getName() + " Result:" + result);
+			return;
+		}
+		
 		ForecastType ft = new ForecastType();
 		ForecastTypeOccurrence fto = new ForecastTypeOccurrence();
 		int homeScore = Integer.valueOf(result.split("-")[0].trim());

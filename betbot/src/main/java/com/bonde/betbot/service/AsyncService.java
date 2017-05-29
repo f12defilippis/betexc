@@ -82,13 +82,16 @@ public class AsyncService {
     public String allfromyear(String strdate) throws Exception{
 
 		SimpleDateFormat formatDateHour = new SimpleDateFormat("yyyy-MM-dd");
-		Date date;
+		Date today;
 		try {
-			date = formatDateHour.parse(strdate);
+			today = formatDateHour.parse(strdate);
 		} catch (ParseException e) {
 			e.printStackTrace();
 			return null;
 		}
+		
+		Date yesterday = DateUtil.addDaysToDate(today, -1);
+		
 		
 		SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
 		String strDatePickForWin = "2016/09/01";
@@ -97,7 +100,12 @@ public class AsyncService {
 		Date datePickForWin = format.parse(strDatePickForWin);
 		Date dateProsoccer = format.parse(strDateProsoccer);
 		
-		while(date.before(new Date()))
+		Date now = new Date();
+		Date dateStatarea = DateUtil.addDaysToDate(now, -4);
+		Date dateVitibet = DateUtil.addDaysToDate(now, -1);
+		
+		
+		while(today.before(new Date()))
 		{
 			
 			log.info("*****************************");
@@ -105,29 +113,43 @@ public class AsyncService {
 			log.info("*****NEW DAY*****************");
 			
 			
-			oddService.getBettingTips1X2Odds(date);
+			oddService.getBettingTips1X2Odds(today);
 			
-			forecastService.getSciBetForecast(date);
-			forecastService.getZulubetForecast(date);
-			forecastService.getMyBetForecast(date);
+			forecastService.getSciBetForecast(today);
+			forecastService.getZulubetForecast(today);
+			forecastService.getMyBetForecast(today);
 
-			if(date.after(datePickForWin))
+			if(today.after(datePickForWin))
 			{
-				forecastService.getPickForWinForecast(date);
+				forecastService.getPickForWinForecast(today);
 			}
-			if(date.after(dateProsoccer))
+			if(today.after(dateProsoccer))
 			{
-				forecastService.getProSoccerForecast(date);
+				forecastService.getProSoccerForecast(today);
 			}
+			if(today.after(dateStatarea))
+			{
+				forecastService.getStatareaForecast(today);
+			}
+			if(today.after(dateVitibet))
+			{
+				forecastService.getVitibetForecast(today);
+			}
+
+			log.info("Starting calculating value bets for date " + DateUtil.fromDateToString(today));
 			
-			resultService.getLivescoreResults(date);
+			int ret = valueBetService.calculateValueBet(today);
+
+			log.info("Calculated " + ret + " ValueBets for date: " + DateUtil.fromDateToString(today));			
+			
+			resultService.getLivescoreResults(yesterday);
 
 			log.info("*****************************");
 			log.info("*****************************");
 			
-			
-			date = DateUtil.addDaysToDate(date, 1);
-			
+			today = DateUtil.addDaysToDate(today, 1);
+			yesterday = DateUtil.addDaysToDate(today, -1);
+
 		}
 		
 

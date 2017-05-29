@@ -28,15 +28,11 @@ import com.bonde.betbot.model.dto.AdjustmentVariableKeyTO;
 import com.bonde.betbot.repository.FattestMatchRepository;
 import com.bonde.betbot.repository.ForecastSummaryRepository;
 import com.bonde.betbot.repository.ForecastValueGroupRepository;
-import com.bonde.betbot.repository.SourceRepository;
 import com.bonde.betbot.util.DateUtil;
 import com.bonde.betbot.util.Threshold;
 
 @Service
 public class BestValueFinderService {
-
-	@Autowired
-	private SourceRepository sourceRepository;
 
 	@Autowired
 	private FattestMatchRepository fattestMatchRepository;
