@@ -38,6 +38,9 @@ public class ZulubetService extends CrawlerService{
 		Elements competitions = document.select("table[class^=content_table]");
 
 		Elements matchRows = competitions.select("tr[bgcolor^=#EFEFEF]");
+		matchRows.addAll(competitions.select("tr[bgcolor^=#FFFFFF]"));
+		
+		
 		for(Element matchRow : matchRows)
 		{
 			try
@@ -61,7 +64,10 @@ public class ZulubetService extends CrawlerService{
 				ret.getRows().add(row);
 			}catch(StringIndexOutOfBoundsException ex)
 			{
-				log.warn("NumberFormatException during read match row: " + ex.getMessage());
+				log.warn("StringIndexOutOfBoundsException during read match row: " + ex.getMessage());
+			}catch(ArrayIndexOutOfBoundsException ex)
+			{
+				log.warn("ArrayIndexOutOfBoundsException during read match row: " + ex.getMessage());
 			}
 		}
 		return ret;
