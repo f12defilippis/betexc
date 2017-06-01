@@ -87,60 +87,68 @@ public class ValueBetService {
 		
 		for (Map.Entry<ValueBetKeyTO,ValueBetTO> entry : map.entrySet()) {
 //			Match match = entry.getKey();
-			ValueBetTO to = entry.getValue();
-			if(to.getForecast()!=null && to.getOdd()!=null)
+
+			try
 			{
-				Forecast forecast = to.getForecast();
-				Odd odd = to.getOdd();
-				
-				double forecastValue = forecast.getForecastValue().getValue();
-				
-				double oddValue = odd.getFirstValue();
+				ValueBetTO to = entry.getValue();
+				if(to.getForecast()!=null && to.getOdd()!=null)
+				{
+					Forecast forecast = to.getForecast();
+					Odd odd = to.getOdd();
+					
+					double forecastValue = forecast.getForecastValue().getValue();
+					
+					double oddValue = odd.getFirstValue();
 
-//				double oddForecast = 1/oddValue;
-				
-				
-				DecimalFormat df = new DecimalFormat("#.##");
-				df.setRoundingMode(RoundingMode.CEILING);			
-				
-				double oddForecast = Double.valueOf(df.format(1/oddValue).replace(",", "."));
-				double oddMargin = Double.valueOf(df.format((forecastValue-oddForecast)/oddForecast).replace(",", "."));
-				List<ForecastValue> fvlist = forecastValueRepository.findByValue(oddMargin);			
+//					double oddForecast = 1/oddValue;
+					
+					
+					DecimalFormat df = new DecimalFormat("#.##");
+					df.setRoundingMode(RoundingMode.CEILING);			
+					
+					double oddForecast = Double.valueOf(df.format(1/oddValue).replace(",", "."));
+					double oddMargin = Double.valueOf(df.format((forecastValue-oddForecast)/oddForecast).replace(",", "."));
+					List<ForecastValue> fvlist = forecastValueRepository.findByValue(oddMargin);			
 
-				ForecastValue margin = new ForecastValue();
-				if(fvlist!=null && fvlist.size()>0)
-				{
-					margin = fvlist.get(0);
-				}else
-				{
-					margin.setValue(oddMargin);
-					forecastValueRepository.save(margin);
+					ForecastValue margin = new ForecastValue();
+					if(fvlist!=null && fvlist.size()>0)
+					{
+						margin = fvlist.get(0);
+					}else
+					{
+						margin.setValue(oddMargin);
+						forecastValueRepository.save(margin);
+					}
+					
+					ValueBet valueBet = new ValueBet();
+					
+					List<ValueBet> listValueBet = valueBetRepository.findByOddAndForecast(odd, forecast);
+					
+					if(listValueBet!=null && listValueBet.size()>0)
+					{
+						valueBet = listValueBet.get(0);
+					}else
+					{
+						valueBet.setForecast(forecast);
+						valueBet.setOdd(odd);
+						valueBet.setDateCreated(new Date());
+					}
+					
+					double expectedOdd = Double.valueOf(df.format(1/forecastValue).replace(",", "."));
+					
+					valueBet.setExpectedOdd(expectedOdd);
+					valueBet.setMargin(margin);
+					
+					valueBet.setDateUpdated(new Date());
+					
+					valueBetRepository.save(valueBet);
+					ret++;
 				}
-				
-				ValueBet valueBet = new ValueBet();
-				
-				List<ValueBet> listValueBet = valueBetRepository.findByOddAndForecast(odd, forecast);
-				
-				if(listValueBet!=null && listValueBet.size()>0)
-				{
-					valueBet = listValueBet.get(0);
-				}else
-				{
-					valueBet.setForecast(forecast);
-					valueBet.setOdd(odd);
-					valueBet.setDateCreated(new Date());
-				}
-				
-				double expectedOdd = Double.valueOf(df.format(1/forecastValue).replace(",", "."));
-				
-				valueBet.setExpectedOdd(expectedOdd);
-				valueBet.setMargin(margin);
-				
-				valueBet.setDateUpdated(new Date());
-				
-				valueBetRepository.save(valueBet);
-				ret++;
+			}catch(NumberFormatException ex)
+			{
+				log.warn("Exception: " + ex.getMessage());
 			}
+			
 		}
 		
 		return ret;
