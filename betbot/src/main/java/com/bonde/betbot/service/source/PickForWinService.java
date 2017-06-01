@@ -46,8 +46,8 @@ public class PickForWinService  extends CrawlerService{
 				Elements matchFields = matchRow.select("td");
 				
 //				String hour = matchFields.get(0).select("noscript").text().split(",")[1].trim();
-				String homeTeam = matchFields.get(1).text().split("-")[0].trim();
-				String awayTeam = matchFields.get(1).text().split("-")[1].trim();
+				String homeTeam = matchFields.get(1).text().split(" - ")[0].trim();
+				String awayTeam = matchFields.get(1).text().split(" - ")[1].trim();
 				String pred1 = matchFields.get(2).text().replace("%", "");
 				String predX = matchFields.get(3).text().replace("%", "");
 				String pred2 = matchFields.get(4).text().replace("%", "");
@@ -71,6 +71,9 @@ public class PickForWinService  extends CrawlerService{
 				row.setPredBTS(goal);
 				
 				ret.getRows().add(row);
+				
+				log.debug("Row Added: " + row.toString());
+				
 			}catch(StringIndexOutOfBoundsException ex)
 			{
 				log.warn("NumberFormatException during read match row: " + ex.getMessage());

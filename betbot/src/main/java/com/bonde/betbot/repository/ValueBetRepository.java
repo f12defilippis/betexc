@@ -1,5 +1,6 @@
 package com.bonde.betbot.repository;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.repository.CrudRepository;
@@ -12,5 +13,10 @@ public interface ValueBetRepository extends CrudRepository<ValueBet, Integer>{
 
 	List<ValueBet> findByOddAndForecast(Odd odd, Forecast forecast);
 
+	List<ValueBet> findByForecastMatchDateStartBetween(Date dateStart, Date dateEnd);
+
+	
+	
+	
 
 }

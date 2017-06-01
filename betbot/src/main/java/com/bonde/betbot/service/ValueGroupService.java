@@ -35,7 +35,6 @@ public class ValueGroupService {
 		for(double i = -100 ; i < 100 ; i = i + 10)
 		{
 			String threshold = "from " + (i+1) + " to " + (i+10);
-			System.out.println("from " + (i+1) + " to " + (i+10));;
 	
 			ValueGroup vg = new ValueGroup();
 			vg.setValueGroupType(new ValueGroupType(ValueGroupType.T10));

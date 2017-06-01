@@ -63,7 +63,7 @@ public class BestValueFinderService {
 		int matchCounter = 0;
 		for(FattestMatch match : matchList)
 		{
-			if(matchCounter % 40 == 0)
+			if(matchCounter % 100 == 0)
 			{
 				log.info("Calculated summaries for " + matchCounter + " matches");
 			}

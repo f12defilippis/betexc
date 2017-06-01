@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bonde.betbot.service.AsyncService;
-import com.bonde.betbot.service.BestValueFinderService;
 import com.bonde.betbot.service.ValueGroupService;
 import com.bonde.betbot.service.datacollection.ForecastService;
 import com.bonde.betbot.service.datacollection.OddService;
@@ -48,8 +47,6 @@ public class BetbotController {
 	@Autowired
 	private ValueGroupService valueGroupService;
 
-	@Autowired
-	private BestValueFinderService bestValueFinderService;
 	
 	
 	@RequestMapping("/fillValueGroup")

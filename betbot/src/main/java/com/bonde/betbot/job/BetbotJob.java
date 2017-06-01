@@ -15,7 +15,7 @@ public class BetbotJob {
 	@Autowired
 	private AsyncService asyncService;
 	
-	@Scheduled(cron="${scheduled.inaday3}")
+	@Scheduled(cron="${scheduled.inaday1}")
 	public void goOddForecastValueBetAndResult() throws Exception
 	{
 		Date now = new Date();

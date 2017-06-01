@@ -134,7 +134,7 @@ public abstract class ForecastResultService {
 		
 		//MATCH
 		List<Match> matchList = new ArrayList<Match>();
-		matchList = matchRepository.findByHomeTeamAndAwayTeamAndDateStartBetween(homeTeam,awayTeam,row.getDate(),DateUtil.addDaysToDate(row.getDate(), 1));
+		matchList = matchRepository.findByHomeTeamAndAwayTeamAndDateStartBetween(homeTeam,awayTeam,row.getDate(),DateUtil.addDaysToDate(row.getDate(), 2));
 		
 		
 		

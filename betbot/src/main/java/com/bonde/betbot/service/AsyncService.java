@@ -15,6 +15,7 @@ import com.bonde.betbot.service.datacollection.OddService;
 import com.bonde.betbot.service.datacollection.ResultService;
 import com.bonde.betbot.service.datacollection.ValueBetService;
 import com.bonde.betbot.util.DateUtil;
+import com.bonde.betbot.util.Threshold;
 
 @Service
 public class AsyncService {
@@ -66,7 +67,7 @@ public class AsyncService {
 			log.info("*****************************");
 			
 			
-			date = DateUtil.addDaysToDate(date, 7);
+			date = DateUtil.addDaysToDate(date, Threshold.SUMMARY_FREQUENCY);
 			
 		}		
 		

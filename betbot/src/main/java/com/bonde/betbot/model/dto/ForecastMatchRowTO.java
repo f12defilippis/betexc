@@ -142,6 +142,15 @@ public class ForecastMatchRowTO {
 	public void setDate(Date date) {
 		this.date = date;
 	}
+	@Override
+	public String toString() {
+		return "ForecastMatchRowTO [date=" + date + ", country=" + country + ", competition=" + competition
+				+ ", homeTeam=" + homeTeam + ", awayTeam=" + awayTeam + ", pred1=" + pred1 + ", predX=" + predX
+				+ ", pred2=" + pred2 + ", pred1ht=" + pred1ht + ", predXht=" + predXht + ", pred2ht=" + pred2ht
+				+ ", predOver15=" + predOver15 + ", predOver25=" + predOver25 + ", predOver35=" + predOver35
+				+ ", predBTS=" + predBTS + ", predOTS=" + predOTS + ", result=" + result + ", resultHT=" + resultHT
+				+ "]";
+	}
 	
 	
 	
