@@ -179,16 +179,16 @@ public class BestValueFinderService {
 
 		
 		//COMPETITION
-		AdjustmentVariableKeyTO forecastCompetitionKey = new AdjustmentVariableKeyTO(forecastKey);
-		AdjustmentVariableKeyTO forecastCompetitionTypeKey = new AdjustmentVariableKeyTO(forecastTypeKey);
-		if(match.getCompetition()!=null)
-		{
-			forecastCompetitionKey.setCompetition(match.getCompetition().getId());
-			updateMap(internalMap, forecastCompetitionKey, verifiedForecast);
-
-			forecastCompetitionTypeKey.setCompetition(match.getCompetition().getId());
-			updateMap(internalMap, forecastCompetitionTypeKey, verifiedForecast);
-		}
+//		AdjustmentVariableKeyTO forecastCompetitionKey = new AdjustmentVariableKeyTO(forecastKey);
+//		AdjustmentVariableKeyTO forecastCompetitionTypeKey = new AdjustmentVariableKeyTO(forecastTypeKey);
+//		if(match.getCompetition()!=null)
+//		{
+//			forecastCompetitionKey.setCompetition(match.getCompetition().getId());
+//			updateMap(internalMap, forecastCompetitionKey, verifiedForecast);
+//
+//			forecastCompetitionTypeKey.setCompetition(match.getCompetition().getId());
+//			updateMap(internalMap, forecastCompetitionTypeKey, verifiedForecast);
+//		}
 		
 		
 		//VALUE BET
@@ -202,16 +202,16 @@ public class BestValueFinderService {
 			forecastValueBetAndTypeKey.setValueBet(vb.getMargin().getId());
 			updateMap(internalMap, forecastValueBetAndTypeKey, verifiedForecast);
 			
-			if(match.getCompetition()!=null)
-			{
-				AdjustmentVariableKeyTO forecastValueBetCompetitionKey = new AdjustmentVariableKeyTO(forecastCompetitionKey);
-				forecastValueBetCompetitionKey.setValueBet(vb.getMargin().getId());
-				updateMap(internalMap, forecastValueBetCompetitionKey, verifiedForecast);
-
-				AdjustmentVariableKeyTO forecastValueBetAndTypeCompetitionKey = new AdjustmentVariableKeyTO(forecastCompetitionTypeKey);
-				forecastValueBetAndTypeCompetitionKey.setValueBet(vb.getMargin().getId());
-				updateMap(internalMap, forecastValueBetAndTypeCompetitionKey, verifiedForecast);
-			}
+//			if(match.getCompetition()!=null)
+//			{
+//				AdjustmentVariableKeyTO forecastValueBetCompetitionKey = new AdjustmentVariableKeyTO(forecastCompetitionKey);
+//				forecastValueBetCompetitionKey.setValueBet(vb.getMargin().getId());
+//				updateMap(internalMap, forecastValueBetCompetitionKey, verifiedForecast);
+//
+//				AdjustmentVariableKeyTO forecastValueBetAndTypeCompetitionKey = new AdjustmentVariableKeyTO(forecastCompetitionTypeKey);
+//				forecastValueBetAndTypeCompetitionKey.setValueBet(vb.getMargin().getId());
+//				updateMap(internalMap, forecastValueBetAndTypeCompetitionKey, verifiedForecast);
+//			}
 
 			List<ForecastValueGroup> valueBetGroupList = forecastValueGroupRepository.findByForecastValue(vb.getMargin());
 			for(ForecastValueGroup fvg : valueBetGroupList)
@@ -224,16 +224,16 @@ public class BestValueFinderService {
 				forecastValueBetAndTypeKeyGroup.setValueBetGroup(fvg.getValueGroup().getId());
 				updateMap(internalMap, forecastValueBetAndTypeKeyGroup, verifiedForecast);
 				
-				if(match.getCompetition()!=null)
-				{
-					AdjustmentVariableKeyTO forecastValueBetCompetitionKeyGroup = new AdjustmentVariableKeyTO(forecastCompetitionKey);
-					forecastValueBetCompetitionKeyGroup.setValueBetGroup(fvg.getValueGroup().getId());
-					updateMap(internalMap, forecastValueBetCompetitionKeyGroup, verifiedForecast);
-
-					AdjustmentVariableKeyTO forecastValueBetAndTypeCompetitionKeyGroup = new AdjustmentVariableKeyTO(forecastCompetitionTypeKey);
-					forecastValueBetAndTypeCompetitionKeyGroup.setValueBetGroup(fvg.getValueGroup().getId());
-					updateMap(internalMap, forecastValueBetAndTypeCompetitionKeyGroup, verifiedForecast);
-				}
+//				if(match.getCompetition()!=null)
+//				{
+//					AdjustmentVariableKeyTO forecastValueBetCompetitionKeyGroup = new AdjustmentVariableKeyTO(forecastCompetitionKey);
+//					forecastValueBetCompetitionKeyGroup.setValueBetGroup(fvg.getValueGroup().getId());
+//					updateMap(internalMap, forecastValueBetCompetitionKeyGroup, verifiedForecast);
+//
+//					AdjustmentVariableKeyTO forecastValueBetAndTypeCompetitionKeyGroup = new AdjustmentVariableKeyTO(forecastCompetitionTypeKey);
+//					forecastValueBetAndTypeCompetitionKeyGroup.setValueBetGroup(fvg.getValueGroup().getId());
+//					updateMap(internalMap, forecastValueBetAndTypeCompetitionKeyGroup, verifiedForecast);
+//				}
 			}
 		
 		
