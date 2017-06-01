@@ -89,7 +89,7 @@ public class TeamDiscoveryService {
 		}
 		
 		
-		saveName(team, row[1], Source.LIVESCORE);
+		saveName(team, row[1], Source.LIVESCORE24);
 		saveName(team, row[2], Source.BETTING1X2);
 		saveName(team, row[3], Source.VITIBET);
 		saveName(team, row[4], Source.FOREBET);

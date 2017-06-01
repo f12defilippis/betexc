@@ -204,7 +204,7 @@ public class BetbotController {
 			return null;
 		}		
 		
-		resultService.getLivescoreResults(date);
+		resultService.getLivescore24Results(date);
 		
 		return "OK!";
     }

@@ -9,7 +9,7 @@ import javax.persistence.Id;
 public class Source implements Serializable{
 
 	public static final int STATAREA = 1;
-	public static final int LIVESCORE = 2;
+	public static final int LIVESCORE24 = 2;
 	public static final int BETTING1X2 = 3;
 	public static final int VITIBET = 4;
 	public static final int FOREBET = 5;

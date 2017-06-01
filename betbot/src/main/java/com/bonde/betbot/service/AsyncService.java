@@ -145,7 +145,7 @@ public class AsyncService {
 
 			log.info("Calculated " + ret + " ValueBets for date: " + DateUtil.fromDateToString(today));			
 			
-			resultService.getLivescoreResults(yesterday);
+			resultService.getLivescore24Results(yesterday);
 
 			log.info("*****************************");
 			log.info("*****************************");
