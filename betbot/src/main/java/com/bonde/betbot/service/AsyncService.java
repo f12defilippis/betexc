@@ -92,6 +92,7 @@ public class AsyncService {
 		}
 		
 		Date yesterday = DateUtil.addDaysToDate(today, -1);
+		Date tomorrow = DateUtil.addDaysToDate(today, 1);
 		
 		
 		SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
@@ -115,6 +116,7 @@ public class AsyncService {
 			
 			
 			oddService.getBettingTips1X2Odds(today);
+			oddService.getBettingTips1X2Odds(tomorrow);
 			
 			forecastService.getSciBetForecast(today);
 			forecastService.getZulubetForecast(today);
@@ -150,6 +152,7 @@ public class AsyncService {
 			
 			today = DateUtil.addDaysToDate(today, 1);
 			yesterday = DateUtil.addDaysToDate(today, -1);
+			tomorrow = DateUtil.addDaysToDate(today, 1);
 
 		}
 		
