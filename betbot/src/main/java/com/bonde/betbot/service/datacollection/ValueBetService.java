@@ -103,7 +103,7 @@ public class ValueBetService {
 					DecimalFormat df = new DecimalFormat("#.##");
 					df.setRoundingMode(RoundingMode.CEILING);			
 					
-					double forecastInOdd = Double.valueOf(df.format(forecastValue).replace(",", "."));
+					double forecastInOdd = Double.valueOf(df.format(1/forecastValue).replace(",", "."));
 					
 					
 //					double oddForecast = 1/oddValue;
