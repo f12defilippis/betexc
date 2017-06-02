@@ -100,14 +100,18 @@ public class ValueBetService {
 					
 					double oddValue = odd.getFirstValue();
 
-//					double oddForecast = 1/oddValue;
-					
-					
 					DecimalFormat df = new DecimalFormat("#.##");
 					df.setRoundingMode(RoundingMode.CEILING);			
 					
-					double oddForecast = Double.valueOf(df.format(1/oddValue).replace(",", "."));
-					double oddMargin = Double.valueOf(df.format((forecastValue-oddForecast)/oddForecast).replace(",", "."));
+					double forecastInOdd = Double.valueOf(df.format(forecastValue).replace(",", "."));
+					
+					
+//					double oddForecast = 1/oddValue;
+					
+					
+					
+//					double oddForecast = Double.valueOf(df.format(1/oddValue).replace(",", "."));
+					double oddMargin = Double.valueOf(df.format((oddValue-forecastInOdd)/oddValue).replace(",", "."));
 					List<ForecastValue> fvlist = forecastValueRepository.findByValue(oddMargin);			
 
 					ForecastValue margin = new ForecastValue();
