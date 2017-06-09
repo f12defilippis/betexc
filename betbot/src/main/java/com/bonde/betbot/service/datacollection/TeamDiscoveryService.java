@@ -42,7 +42,7 @@ public class TeamDiscoveryService {
 	      CSVReader reader;
 		try {
 			InputStream in = this.getClass().getClassLoader()
-	                .getResourceAsStream("MappingTeam2.csv");
+	                .getResourceAsStream("MappingTeam3.csv");
 			reader = new CSVReader(new BufferedReader(new InputStreamReader(in,"UTF-8")),';');
 			List<String[]> allRows = reader.readAll();
 		    for(int i = 1 ; i < allRows.size() ; i++){

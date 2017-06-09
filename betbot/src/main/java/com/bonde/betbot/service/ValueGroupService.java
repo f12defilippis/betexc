@@ -68,6 +68,13 @@ public class ValueGroupService {
 			valueGroupRepository.save(vg);
 		}
 
+		for(double i = -1 ; i <= 1 ; i = i + 0.01)
+		{
+			ForecastValue fv = new ForecastValue();
+			fv.setValue(i);
+			forecastValueRepository.save(fv);
+		}
+		
 		List<ForecastValue> listFv = forecastValueRepository.findAllByOrderByValueAsc();
 
 		for(ForecastValue fv : listFv)
@@ -82,9 +89,6 @@ public class ValueGroupService {
 				forecastValueGroupRepository.save(fvg);
 			}
 		}
-		
-		
-		
 		
 	}
 

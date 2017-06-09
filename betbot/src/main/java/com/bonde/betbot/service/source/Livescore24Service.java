@@ -25,7 +25,6 @@ import com.gargoylesoftware.htmlunit.html.HtmlTable;
 import com.gargoylesoftware.htmlunit.html.HtmlTableBody;
 import com.gargoylesoftware.htmlunit.html.HtmlTableCell;
 import com.gargoylesoftware.htmlunit.html.HtmlTableRow;
-import com.gargoylesoftware.htmlunit.javascript.host.html.HTMLDivElement;
 
 @Service
 public class Livescore24Service extends CrawlerService{
@@ -115,62 +114,74 @@ public class Livescore24Service extends CrawlerService{
 			webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);
 
 			final HtmlPage page = webClient.getPage("http://www.livescore24.it/Calcio/risultati/" + strDate);
-	        
-	        List<DomNode> competitions = page.querySelectorAll(".table-livescore");
-	        for(DomNode competition : competitions)
-	        {
-	        	List<HtmlTableBody> bodies = ((HtmlTable)competition).getBodies();
 
-	        	HtmlTableBody body = bodies.get(0);
-	        	
-	        	List<HtmlTableRow> rows = body.getRows();
-	        	for(HtmlTableRow tr : rows)
-	        	{
-		        	try{
-						ForecastMatchRowTO row = new ForecastMatchRowTO();
+			List<DomNode> competitionsDiv = page.querySelectorAll(".box-tournament");
+			
+			for(DomNode competitionDiv : competitionsDiv)
+			{
+				String competitionString = competitionDiv.querySelector(".cursorP").getTextContent();
+				
+		        List<DomNode> competitions = competitionDiv.querySelectorAll(".table-livescore");
+		        for(DomNode competition : competitions)
+		        {
+		        	List<HtmlTableBody> bodies = ((HtmlTable)competition).getBodies();
+
+		        	HtmlTableBody body = bodies.get(0);
+		        	
+		        	List<HtmlTableRow> rows = body.getRows();
+		        	for(HtmlTableRow tr : rows)
+		        	{
+			        	try{
+							ForecastMatchRowTO row = new ForecastMatchRowTO();
+			        		
+			        		List<HtmlTableCell> cells = tr.getCells();
+//			        		String hour = cells.get(1).getTextContent().trim();
+			        		String homeTeam = cells.get(3).getElementsByTagName("a").get(0).getTextContent().trim();
+			        		String awayTeam = "";
+			        		if(cells.get(5).getElementsByTagName("a").size()>1)
+			        		{
+			        			awayTeam=cells.get(5).getElementsByTagName("a").get(1).getTextContent().trim();
+			        		}else
+			        		{
+			        			awayTeam=cells.get(5).getElementsByTagName("a").get(0).getTextContent().trim();
+			        		}
+			        		
+//			        		DomNode node = tr.querySelector(".m_score");
+			        		HtmlElement div = tr.getElementsByAttribute("div", "class", "m_score").get(0);
+			        		
+			        		
+//			        		String finalScoreHomeTeam = div.getElementsByTagName("span").get(0).getTextContent().trim(); 
+			        		String finalScoreHomeTeam = div.getElementsByAttribute("span", "data-teamscore", "1").get(0).getTextContent().trim(); 
+		
+//							String finalScoreAwayTeam = div.getElementsByTagName("span").get(1).getTextContent().trim(); 
+							String finalScoreAwayTeam = div.getElementsByAttribute("span", "data-teamscore", "2").get(0).getTextContent().trim(); 
+
+							
+							String finalScore = finalScoreHomeTeam + " - " + finalScoreAwayTeam;
+							String halftimeScore = cells.get(6).getTextContent().replace("(", "").replace(")", "").replace("-", ":");
+		
+//							row.setDate(DateUtil.dateManagement(date, hour));
+							row.setDate(date);
+							row.setHomeTeam(homeTeam);
+							row.setAwayTeam(awayTeam);
+							row.setCompetition(competitionString);				
+							row.setResult(finalScore);
+							row.setResultHT(halftimeScore);
+							
+							ret.getRows().add(row);				
+						}catch(IndexOutOfBoundsException ioex)
+						{
+							log.warn("IndexOutOfBoundsException during read match row: " + ioex.getMessage());
+						}catch(NumberFormatException ioex)
+						{
+							log.warn("NumberFormatException during read match row: " + ioex.getMessage());
+						}					
 		        		
-		        		List<HtmlTableCell> cells = tr.getCells();
-		        		String hour = cells.get(1).getTextContent().trim();
-		        		String homeTeam = cells.get(3).getElementsByTagName("a").get(0).getTextContent().trim();
-		        		String awayTeam = "";
-		        		if(cells.get(5).getElementsByTagName("a").size()>1)
-		        		{
-		        			awayTeam=cells.get(5).getElementsByTagName("a").get(1).getTextContent().trim();
-		        		}else
-		        		{
-		        			awayTeam=cells.get(5).getElementsByTagName("a").get(0).getTextContent().trim();
-		        		}
-		        		
-		        		DomNode node = tr.querySelector(".m_score");
-		        		HtmlElement div = tr.getElementsByAttribute("div", "class", "m_score").get(0);
-		        		
-		        		
-		        		String finalScoreHomeTeam = div.getElementsByTagName("span").get(0).getTextContent().trim(); 
-	
-		        		
-						String finalScoreAwayTeam = div.getElementsByTagName("span").get(1).getTextContent().trim(); 
-						
-						String finalScore = finalScoreHomeTeam + " - " + finalScoreAwayTeam;
-						String halftimeScore = cells.get(6).getTextContent().replace("(", "").replace(")", "").replace("-", ":");
-	
-//						row.setDate(DateUtil.dateManagement(date, hour));
-						row.setDate(date);
-						row.setHomeTeam(homeTeam);
-						row.setAwayTeam(awayTeam);
-										
-						row.setResult(finalScore);
-						row.setResultHT(halftimeScore);
-						
-						ret.getRows().add(row);				
-					}catch(IndexOutOfBoundsException ioex)
-					{
-						log.warn("IndexOutOfBoundsException during read match row: " + ioex.getMessage());
-					}catch(NumberFormatException ioex)
-					{
-						log.warn("NumberFormatException during read match row: " + ioex.getMessage());
-					}					
-	        		
-	        	}
+		        	}
+				
+		        }
+			
+			
 	        	
 	        	
 	        	

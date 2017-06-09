@@ -8,12 +8,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.bonde.betbot.model.domain.CompetitionExclusion;
 import com.bonde.betbot.model.domain.Match;
 import com.bonde.betbot.model.domain.Source;
 import com.bonde.betbot.model.domain.Team;
 import com.bonde.betbot.model.domain.TeamName;
 import com.bonde.betbot.model.dto.ForecastMatchRowTO;
 import com.bonde.betbot.model.dto.ForecastScan;
+import com.bonde.betbot.repository.CompetitionExclusionRepository;
 import com.bonde.betbot.repository.CompetitionRepository;
 import com.bonde.betbot.repository.ForecastRepository;
 import com.bonde.betbot.repository.ForecastValueRepository;
@@ -61,6 +63,9 @@ public abstract class ForecastResultService {
 
 	@Autowired
 	ForecastRepository forecastRepository;	
+
+	@Autowired
+	CompetitionExclusionRepository competitionExclusionRepository;
 	
 	@Autowired
 	SummaryService summaryService;
@@ -119,6 +124,16 @@ public abstract class ForecastResultService {
 	
 	public Match saveMatchData(ForecastMatchRowTO row, ForecastScan scan, Date date, Source source)
 	{
+		
+		if(row.getCompetition()!=null && !row.getCompetition().equals(""))
+		{
+			List<CompetitionExclusion> excluded = competitionExclusionRepository.findByDescription(row.getCompetition());
+			if(excluded!=null && excluded.size()>0)
+			{
+				log.debug("COMPETITION SKIPPED : " + row.getCompetition());
+				return null;
+			}
+		}
 
 
 		//TEAM
