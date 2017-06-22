@@ -114,14 +114,16 @@ public class BestValueFinderService {
 //					List<ForecastValueGroup> forecastValueGroups = forecastValueGroupRepository.findByForecastValue(forecast.getForecastValue());
 					List<ForecastValueGroup> forecastValueGroups = fvgMap.get(forecast.getForecastValue().getId());
 
-					
-					for(ForecastValueGroup fvg : forecastValueGroups)
+					if(forecastValueGroups!=null)
 					{
-						AdjustmentVariableKeyTO forecastKeyGroup = new AdjustmentVariableKeyTO();
-						forecastKeyGroup.setForecastValueGroup(fvg.getValueGroup().getId());
-						updateMap(internalMap, forecastKeyGroup, verifiedForecast);
-						
-						generateCombination(forecast, internalMap, forecastKeyGroup, verifiedForecast, match, fvgMap);
+						for(ForecastValueGroup fvg : forecastValueGroups)
+						{
+							AdjustmentVariableKeyTO forecastKeyGroup = new AdjustmentVariableKeyTO();
+							forecastKeyGroup.setForecastValueGroup(fvg.getValueGroup().getId());
+							updateMap(internalMap, forecastKeyGroup, verifiedForecast);
+							
+							generateCombination(forecast, internalMap, forecastKeyGroup, verifiedForecast, match, fvgMap);
+						}
 					}
 				}
 			}
@@ -240,29 +242,30 @@ public class BestValueFinderService {
 
 //			List<ForecastValueGroup> valueBetGroupList = forecastValueGroupRepository.findByForecastValue(vb.getMargin());
 			List<ForecastValueGroup> valueBetGroupList = fvgMap.get(vb.getMargin().getId());
-			for(ForecastValueGroup fvg : valueBetGroupList)
+			if(valueBetGroupList!=null)
 			{
-				AdjustmentVariableKeyTO forecastValueBetKeyGroup = new AdjustmentVariableKeyTO(forecastKey);
-				forecastValueBetKeyGroup.setValueBetGroup(fvg.getValueGroup().getId());
-				updateMap(internalMap, forecastValueBetKeyGroup, verifiedForecast);
+				for(ForecastValueGroup fvg : valueBetGroupList)
+				{
+					AdjustmentVariableKeyTO forecastValueBetKeyGroup = new AdjustmentVariableKeyTO(forecastKey);
+					forecastValueBetKeyGroup.setValueBetGroup(fvg.getValueGroup().getId());
+					updateMap(internalMap, forecastValueBetKeyGroup, verifiedForecast);
 
-				AdjustmentVariableKeyTO forecastValueBetAndTypeKeyGroup = new AdjustmentVariableKeyTO(forecastTypeKey);
-				forecastValueBetAndTypeKeyGroup.setValueBetGroup(fvg.getValueGroup().getId());
-				updateMap(internalMap, forecastValueBetAndTypeKeyGroup, verifiedForecast);
-				
-//				if(match.getCompetition()!=null)
-//				{
-//					AdjustmentVariableKeyTO forecastValueBetCompetitionKeyGroup = new AdjustmentVariableKeyTO(forecastCompetitionKey);
-//					forecastValueBetCompetitionKeyGroup.setValueBetGroup(fvg.getValueGroup().getId());
-//					updateMap(internalMap, forecastValueBetCompetitionKeyGroup, verifiedForecast);
-//
-//					AdjustmentVariableKeyTO forecastValueBetAndTypeCompetitionKeyGroup = new AdjustmentVariableKeyTO(forecastCompetitionTypeKey);
-//					forecastValueBetAndTypeCompetitionKeyGroup.setValueBetGroup(fvg.getValueGroup().getId());
-//					updateMap(internalMap, forecastValueBetAndTypeCompetitionKeyGroup, verifiedForecast);
-//				}
+					AdjustmentVariableKeyTO forecastValueBetAndTypeKeyGroup = new AdjustmentVariableKeyTO(forecastTypeKey);
+					forecastValueBetAndTypeKeyGroup.setValueBetGroup(fvg.getValueGroup().getId());
+					updateMap(internalMap, forecastValueBetAndTypeKeyGroup, verifiedForecast);
+					
+//					if(match.getCompetition()!=null)
+//					{
+//						AdjustmentVariableKeyTO forecastValueBetCompetitionKeyGroup = new AdjustmentVariableKeyTO(forecastCompetitionKey);
+//						forecastValueBetCompetitionKeyGroup.setValueBetGroup(fvg.getValueGroup().getId());
+//						updateMap(internalMap, forecastValueBetCompetitionKeyGroup, verifiedForecast);
+	//
+//						AdjustmentVariableKeyTO forecastValueBetAndTypeCompetitionKeyGroup = new AdjustmentVariableKeyTO(forecastCompetitionTypeKey);
+//						forecastValueBetAndTypeCompetitionKeyGroup.setValueBetGroup(fvg.getValueGroup().getId());
+//						updateMap(internalMap, forecastValueBetAndTypeCompetitionKeyGroup, verifiedForecast);
+//					}
+				}
 			}
-		
-		
 		
 		}
 		
