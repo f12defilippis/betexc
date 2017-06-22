@@ -1,5 +1,6 @@
 package com.bonde.betbot.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -50,6 +51,26 @@ public class BestValueFinderService {
 	{
 		log.info("Calculating adjustment for date " + DateUtil.fromDateToString(date));
 				
+		
+		List<ForecastValueGroup> fvgList = (List<ForecastValueGroup>) forecastValueGroupRepository.findAll();
+		
+
+		Map<ForecastValue,List<ForecastValueGroup>> fvgMap = new HashMap<ForecastValue, List<ForecastValueGroup>>();
+		
+		for(ForecastValueGroup fvg : fvgList)
+		{
+			if(fvgMap.get(fvg.getForecastValue())==null)
+			{
+				List<ForecastValueGroup> fvgInternalList = new ArrayList<ForecastValueGroup>();
+				fvgMap.put(fvg.getForecastValue(), fvgInternalList);
+			}
+			
+			fvgMap.get(fvg.getForecastValue()).add(fvg);
+		}
+		
+		log.info("Got ForecastValueGroup Map");
+		
+		
 		List<FattestMatch> matchList = fattestMatchRepository.findByDateStartBetween(DateUtil.addDaysToDate(date, Threshold.DAYS_BEFORE * -1), date);
 
 		if(matchList!=null && matchList.size()>0)
@@ -88,9 +109,10 @@ public class BestValueFinderService {
 					forecastKey.setForecastValue(forecast.getForecastValue().getId());
 					updateMap(internalMap, forecastKey, verifiedForecast);
 					
-					generateCombination(forecast, internalMap, forecastKey, verifiedForecast, match);
+					generateCombination(forecast, internalMap, forecastKey, verifiedForecast, match, fvgMap);
 
-					List<ForecastValueGroup> forecastValueGroups = forecastValueGroupRepository.findByForecastValue(forecast.getForecastValue());
+//					List<ForecastValueGroup> forecastValueGroups = forecastValueGroupRepository.findByForecastValue(forecast.getForecastValue());
+					List<ForecastValueGroup> forecastValueGroups = fvgMap.get(forecast.getForecastValue());
 
 					
 					for(ForecastValueGroup fvg : forecastValueGroups)
@@ -99,7 +121,7 @@ public class BestValueFinderService {
 						forecastKeyGroup.setForecastValueGroup(fvg.getValueGroup().getId());
 						updateMap(internalMap, forecastKeyGroup, verifiedForecast);
 						
-						generateCombination(forecast, internalMap, forecastKeyGroup, verifiedForecast, match);
+						generateCombination(forecast, internalMap, forecastKeyGroup, verifiedForecast, match, fvgMap);
 					}
 				}
 			}
@@ -171,7 +193,7 @@ public class BestValueFinderService {
 	}
 	
 	
-	private void generateCombination(FatForecast forecast, Map<AdjustmentVariableKeyTO,AdjustmentValueTO> internalMap, AdjustmentVariableKeyTO forecastKey, boolean verifiedForecast, FattestMatch match)
+	private void generateCombination(FatForecast forecast, Map<AdjustmentVariableKeyTO,AdjustmentValueTO> internalMap, AdjustmentVariableKeyTO forecastKey, boolean verifiedForecast, FattestMatch match, Map<ForecastValue,List<ForecastValueGroup>> fvgMap)
 	{
 		log.debug("Generating combination for Forecast " + forecast.getForecastTypeOccurrence().getForecastType().getDescription() + "-" + forecast.getForecastTypeOccurrence().getDescription());
 		
@@ -216,7 +238,8 @@ public class BestValueFinderService {
 //				updateMap(internalMap, forecastValueBetAndTypeCompetitionKey, verifiedForecast);
 //			}
 
-			List<ForecastValueGroup> valueBetGroupList = forecastValueGroupRepository.findByForecastValue(vb.getMargin());
+//			List<ForecastValueGroup> valueBetGroupList = forecastValueGroupRepository.findByForecastValue(vb.getMargin());
+			List<ForecastValueGroup> valueBetGroupList = fvgMap.get(vb.getMargin());
 			for(ForecastValueGroup fvg : valueBetGroupList)
 			{
 				AdjustmentVariableKeyTO forecastValueBetKeyGroup = new AdjustmentVariableKeyTO(forecastKey);
