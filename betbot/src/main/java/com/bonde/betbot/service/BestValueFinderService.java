@@ -71,7 +71,7 @@ public class BestValueFinderService {
 
 			if(match.getResults()!=null && match.getResults().size() > 0)
 			{
-				log.debug("NEW MATCH: " + DateUtil.fromDateToString(match.getDateStart()) + " " + match.getHomeTeam().getName() + " - " + match.getAwayTeam().getName() + " = " + match.getFinalScore()); 
+				log.info("NEW MATCH: " + DateUtil.fromDateToString(match.getDateStart()) + " " + match.getHomeTeam().getName() + " - " + match.getAwayTeam().getName() + " = " + match.getFinalScore() + " ForecastNumber: " + (match.getForecasts()==null ? "0" : String.valueOf(match.getForecasts().size()))); 
 				for(FatForecast forecast : match.getForecasts())
 				{
 					boolean verifiedForecast = verifyForecast(forecast, match);
