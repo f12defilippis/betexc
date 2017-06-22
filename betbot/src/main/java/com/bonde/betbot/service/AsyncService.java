@@ -38,6 +38,50 @@ public class AsyncService {
 	@Autowired
 	private BestValueFinderService bestValueFinderService;	
 	
+	@Autowired
+	private ProbabilityService probabilityService;	
+
+	@Async
+    public String calculateFinal(String strdate) throws Exception{
+
+		SimpleDateFormat formatDateHour = new SimpleDateFormat("yyyy-MM-dd");
+		Date date;
+		try {
+			date = formatDateHour.parse(strdate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return null;
+		}		
+		
+		while(date.before(new Date()))
+		{
+			
+			log.info("*****************************");
+			log.info("*****************************");
+			log.info("*****NEW DAY*****************");
+			
+			
+			probabilityService.findProbabilities(date);
+			
+
+			log.info("*****************************");
+			log.info("*****************************");
+			
+			
+			date = DateUtil.addDaysToDate(date, Threshold.SUMMARY_FREQUENCY);
+			
+		}		
+		
+		
+		
+		
+		return "OK!";
+    }		
+	
+	
+	
+	
+	
 	
 	
 	@Async

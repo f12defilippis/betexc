@@ -2,7 +2,6 @@ package com.bonde.betbot.model.domain;
 
 import java.io.Serializable;
 import java.util.Comparator;
-import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -33,7 +32,7 @@ public class ForecastFinal implements Serializable{
 	private Match match;
 
 	@ManyToOne
-    @JoinColumn(name = "forecast_type_occerrence", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "forecast_type_occurrence", referencedColumnName = "id", nullable = false)
 	private ForecastTypeOccurrence forecastTypeOccurrence;;
 	
 	private double initialProbability;
@@ -51,24 +50,24 @@ public class ForecastFinal implements Serializable{
 	private String forecastSummaryParameter;
 	
 	
-	private Date dateCreated;
-	private Date dateUpdated;
-	
-	public Date getDateCreated() {
-		return dateCreated;
-	}
-
-	public void setDateCreated(Date dateCreated) {
-		this.dateCreated = dateCreated;
-	}
-
-	public Date getDateUpdated() {
-		return dateUpdated;
-	}
-
-	public void setDateUpdated(Date dateUpdated) {
-		this.dateUpdated = dateUpdated;
-	}
+//	private Date dateCreated;
+//	private Date dateUpdated;
+//	
+//	public Date getDateCreated() {
+//		return dateCreated;
+//	}
+//
+//	public void setDateCreated(Date dateCreated) {
+//		this.dateCreated = dateCreated;
+//	}
+//
+//	public Date getDateUpdated() {
+//		return dateUpdated;
+//	}
+//
+//	public void setDateUpdated(Date dateUpdated) {
+//		this.dateUpdated = dateUpdated;
+//	}
 	
 
 	public Integer getId() {
@@ -225,8 +224,7 @@ public class ForecastFinal implements Serializable{
 				+ ", adjustedProbability=" + adjustedProbability + ", initialMargin=" + initialMargin
 				+ ", adjustedMargin=" + adjustedMargin + ", probabilityVariation=" + probabilityVariation
 				+ ", sqmaverage=" + sqmaverage + ", forecastTypeOccurrenceOrder=" + forecastTypeOccurrenceOrder
-				+ ", forecastSummaryParameter=" + forecastSummaryParameter + ", dateCreated=" + dateCreated
-				+ ", dateUpdated=" + dateUpdated + "]";
+				+ ", forecastSummaryParameter=" + forecastSummaryParameter + "]";
 	}
 	
 	

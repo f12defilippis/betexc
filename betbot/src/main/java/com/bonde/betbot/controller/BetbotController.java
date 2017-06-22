@@ -66,6 +66,13 @@ public class BetbotController {
 		return "OK!";
     }	
 	
+	@RequestMapping("/calculateFinal")
+    private String calculateFinal(HttpServletRequest req, @RequestParam(value="date", defaultValue="World") String strdate) throws Exception{
+
+		asyncService.calculateFinal(strdate);
+		
+		return "OK!";
+    }	
 	
 	
 	@RequestMapping("/scanprosoccer")

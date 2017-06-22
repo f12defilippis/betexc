@@ -97,7 +97,7 @@ public class ProbabilityService {
 		
 		for(int i = 3 ; i >= 1 ; i--)
 		{
-			int vgType = valueGroupTypes[i];
+			int vgType = valueGroupTypes[i-1];
 
 		
 			if(!checkSummaries(forecastSummaries,forecastSummaryParameter,vb))
@@ -221,7 +221,7 @@ public class ProbabilityService {
 
 		DecimalFormat df = new DecimalFormat("#.##");
 		df.setRoundingMode(RoundingMode.CEILING);			
-		double realProbability = Double.valueOf(df.format(verifiedOccurreces / totalOccurrences).replace(",", "."));
+		double realProbability = Double.valueOf(df.format(Double.valueOf(verifiedOccurreces) / Double.valueOf(totalOccurrences)).replace(",", "."));
 		double oddForecast = 1/vb.getOdd().getFirstValue();
 
 		ForecastFinal forecastFinal = new ForecastFinal();
@@ -296,13 +296,13 @@ public class ProbabilityService {
 				forecastFtoSourceMap.put(ff.getMatch().getId(), forecastFinalsInternalMap);
 			}
 			
-			if(forecastFtoSourceMap.get(ff.getMatch().getId()).get(ff.getForecastTypeOccurrence().getForecastType().getId()).get(ff.getSource().getId())==null)
+			if(forecastFtoSourceMap.get(ff.getMatch().getId()).get(ff.getForecastTypeOccurrence().getId()).get(ff.getSource().getId())==null)
 			{
 				List<ForecastFinal> ffList = new ArrayList<ForecastFinal>();
-				forecastFtoSourceMap.get(ff.getMatch().getId()).get(ff.getForecastTypeOccurrence().getForecastType().getId()).put(ff.getSource().getId(), ffList);
+				forecastFtoSourceMap.get(ff.getMatch().getId()).get(ff.getForecastTypeOccurrence().getId()).put(ff.getSource().getId(), ffList);
 			}
 			
-			forecastFtoSourceMap.get(ff.getMatch().getId()).get(ff.getForecastTypeOccurrence().getForecastType().getId()).get(ff.getSource().getId()).add(ff);
+			forecastFtoSourceMap.get(ff.getMatch().getId()).get(ff.getForecastTypeOccurrence().getId()).get(ff.getSource().getId()).add(ff);
 		
 		}
 
@@ -410,7 +410,7 @@ public class ProbabilityService {
 		double sum = 0.0;
 		for(ForecastSummary fs : forecastSummaries)
 		{
-			double verifiedPerc = fs.getNumVerified()/fs.getNumOccurrences();
+			double verifiedPerc = Double.valueOf(fs.getNumVerified())/Double.valueOf(fs.getNumOccurrences());
 			sum = sum + verifiedPerc;
 		}
 		double average = sum/forecastSummaries.size();
@@ -418,7 +418,7 @@ public class ProbabilityService {
 		double powerValueSum = 0.0;
 		for(ForecastSummary fs : forecastSummaries)
 		{
-			double verifiedPerc = fs.getNumVerified()/fs.getNumOccurrences();
+			double verifiedPerc = Double.valueOf(fs.getNumVerified())/Double.valueOf(fs.getNumOccurrences());
 			double powerValue = Math.pow(verifiedPerc-average, 2);
 			powerValueSum = powerValueSum + powerValue;
 		}
