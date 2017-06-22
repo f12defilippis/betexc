@@ -65,7 +65,7 @@ public class BestValueFinderService {
 				fvgMap.put(fvg.getForecastValue().getId(), fvgInternalList);
 			}
 			
-			fvgMap.get(fvg.getForecastValue()).add(fvg);
+			fvgMap.get(fvg.getForecastValue().getId()).add(fvg);
 		}
 		
 		log.info("Got ForecastValueGroup Map");
