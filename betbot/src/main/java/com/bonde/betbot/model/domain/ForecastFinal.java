@@ -181,6 +181,21 @@ public class ForecastFinal implements Serializable{
 		return comp;
 	}
 	
+	public static Comparator<ForecastFinal> sortByProbabilityVariation() {
+		Comparator<ForecastFinal> comp = new Comparator<ForecastFinal>() {
+			@Override
+			public int compare(ForecastFinal s1, ForecastFinal s2) {
+				if (s1.probabilityVariation < s2.probabilityVariation)
+					return -1;
+				if (s1.probabilityVariation > s2.probabilityVariation)
+					return 1;
+				return 0;
+			}
+		};
+		return comp;
+	}	
+	
+	
 	public static Comparator<ForecastFinal> sortByAdjustedProbabilityDesc() {
 		Comparator<ForecastFinal> comp = new Comparator<ForecastFinal>() {
 			@Override
@@ -201,6 +216,17 @@ public class ForecastFinal implements Serializable{
 
 	public void setSqmaverage(double sqmaverage) {
 		this.sqmaverage = sqmaverage;
+	}
+
+	@Override
+	public String toString() {
+		return "ForecastFinal [id=" + id + ", odd=" + odd + ", source=" + source + ", match=" + match
+				+ ", forecastTypeOccurrence=" + forecastTypeOccurrence + ", initialProbability=" + initialProbability
+				+ ", adjustedProbability=" + adjustedProbability + ", initialMargin=" + initialMargin
+				+ ", adjustedMargin=" + adjustedMargin + ", probabilityVariation=" + probabilityVariation
+				+ ", sqmaverage=" + sqmaverage + ", forecastTypeOccurrenceOrder=" + forecastTypeOccurrenceOrder
+				+ ", forecastSummaryParameter=" + forecastSummaryParameter + ", dateCreated=" + dateCreated
+				+ ", dateUpdated=" + dateUpdated + "]";
 	}
 	
 	
