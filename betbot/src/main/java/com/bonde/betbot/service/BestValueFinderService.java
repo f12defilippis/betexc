@@ -55,14 +55,14 @@ public class BestValueFinderService {
 		List<ForecastValueGroup> fvgList = (List<ForecastValueGroup>) forecastValueGroupRepository.findAll();
 		
 
-		Map<ForecastValue,List<ForecastValueGroup>> fvgMap = new HashMap<ForecastValue, List<ForecastValueGroup>>();
+		Map<Integer,List<ForecastValueGroup>> fvgMap = new HashMap<Integer, List<ForecastValueGroup>>();
 		
 		for(ForecastValueGroup fvg : fvgList)
 		{
 			if(fvgMap.get(fvg.getForecastValue())==null)
 			{
 				List<ForecastValueGroup> fvgInternalList = new ArrayList<ForecastValueGroup>();
-				fvgMap.put(fvg.getForecastValue(), fvgInternalList);
+				fvgMap.put(fvg.getForecastValue().getId(), fvgInternalList);
 			}
 			
 			fvgMap.get(fvg.getForecastValue()).add(fvg);
@@ -112,7 +112,7 @@ public class BestValueFinderService {
 					generateCombination(forecast, internalMap, forecastKey, verifiedForecast, match, fvgMap);
 
 //					List<ForecastValueGroup> forecastValueGroups = forecastValueGroupRepository.findByForecastValue(forecast.getForecastValue());
-					List<ForecastValueGroup> forecastValueGroups = fvgMap.get(forecast.getForecastValue());
+					List<ForecastValueGroup> forecastValueGroups = fvgMap.get(forecast.getForecastValue().getId());
 
 					
 					for(ForecastValueGroup fvg : forecastValueGroups)
@@ -193,7 +193,7 @@ public class BestValueFinderService {
 	}
 	
 	
-	private void generateCombination(FatForecast forecast, Map<AdjustmentVariableKeyTO,AdjustmentValueTO> internalMap, AdjustmentVariableKeyTO forecastKey, boolean verifiedForecast, FattestMatch match, Map<ForecastValue,List<ForecastValueGroup>> fvgMap)
+	private void generateCombination(FatForecast forecast, Map<AdjustmentVariableKeyTO,AdjustmentValueTO> internalMap, AdjustmentVariableKeyTO forecastKey, boolean verifiedForecast, FattestMatch match, Map<Integer,List<ForecastValueGroup>> fvgMap)
 	{
 		log.debug("Generating combination for Forecast " + forecast.getForecastTypeOccurrence().getForecastType().getDescription() + "-" + forecast.getForecastTypeOccurrence().getDescription());
 		
@@ -239,7 +239,7 @@ public class BestValueFinderService {
 //			}
 
 //			List<ForecastValueGroup> valueBetGroupList = forecastValueGroupRepository.findByForecastValue(vb.getMargin());
-			List<ForecastValueGroup> valueBetGroupList = fvgMap.get(vb.getMargin());
+			List<ForecastValueGroup> valueBetGroupList = fvgMap.get(vb.getMargin().getId());
 			for(ForecastValueGroup fvg : valueBetGroupList)
 			{
 				AdjustmentVariableKeyTO forecastValueBetKeyGroup = new AdjustmentVariableKeyTO(forecastKey);
