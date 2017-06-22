@@ -68,9 +68,10 @@ public class BestValueFinderService {
 				log.info("Calculated summaries for " + matchCounter + " matches");
 			}
 			matchCounter++;
-			
+
 			if(match.getResults()!=null && match.getResults().size() > 0)
 			{
+				log.debug("NEW MATCH: " + DateUtil.fromDateToString(match.getDateStart()) + " " + match.getHomeTeam().getName() + " - " + match.getAwayTeam().getName() + " = " + match.getFinalScore()); 
 				for(FatForecast forecast : match.getForecasts())
 				{
 					boolean verifiedForecast = verifyForecast(forecast, match);
@@ -172,6 +173,8 @@ public class BestValueFinderService {
 	
 	private void generateCombination(FatForecast forecast, Map<AdjustmentVariableKeyTO,AdjustmentValueTO> internalMap, AdjustmentVariableKeyTO forecastKey, boolean verifiedForecast, FattestMatch match)
 	{
+		log.debug("Generating combination for Forecast " + forecast.getForecastTypeOccurrence().getForecastType().getDescription() + "-" + forecast.getForecastTypeOccurrence().getDescription());
+		
 		AdjustmentVariableKeyTO forecastTypeKey = new AdjustmentVariableKeyTO(forecastKey);
 		forecastTypeKey.setForecastTypeOccurrence(forecast.getForecastTypeOccurrence().getId());
 		updateMap(internalMap, forecastTypeKey, verifiedForecast);
@@ -270,6 +273,7 @@ public class BestValueFinderService {
 				verifiedForecast = true;
 			}
 		}
+		log.debug("Forecast " + forecast.getForecastTypeOccurrence().getForecastType().getDescription() + "-" + forecast.getForecastTypeOccurrence().getDescription()+ " Verified: " + verifiedForecast);
 		return verifiedForecast;
 	}
 	
