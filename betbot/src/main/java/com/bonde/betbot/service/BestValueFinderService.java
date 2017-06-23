@@ -59,7 +59,7 @@ public class BestValueFinderService {
 		
 		for(ForecastValueGroup fvg : fvgList)
 		{
-			if(fvgMap.get(fvg.getForecastValue())==null)
+			if(fvgMap.get(fvg.getForecastValue().getId())==null)
 			{
 				List<ForecastValueGroup> fvgInternalList = new ArrayList<ForecastValueGroup>();
 				fvgMap.put(fvg.getForecastValue().getId(), fvgInternalList);
@@ -84,7 +84,7 @@ public class BestValueFinderService {
 		int matchCounter = 0;
 		for(FattestMatch match : matchList)
 		{
-			if(matchCounter % 100 == 0)
+			if(matchCounter % 200 == 0)
 			{
 				log.info("Calculated summaries for " + matchCounter + " matches");
 			}
@@ -92,7 +92,7 @@ public class BestValueFinderService {
 
 			if(match.getResults()!=null && match.getResults().size() > 0)
 			{
-				log.info("NEW MATCH: " + DateUtil.fromDateToString(match.getDateStart()) + " " + match.getHomeTeam().getName() + " - " + match.getAwayTeam().getName() + " = " + match.getFinalScore() + " ForecastNumber: " + (match.getForecasts()==null ? "0" : String.valueOf(match.getForecasts().size()))); 
+				log.debug("NEW MATCH: " + DateUtil.fromDateToString(match.getDateStart()) + " " + match.getHomeTeam().getName() + " - " + match.getAwayTeam().getName() + " = " + match.getFinalScore() + " ForecastNumber: " + (match.getForecasts()==null ? "0" : String.valueOf(match.getForecasts().size()))); 
 				for(FatForecast forecast : match.getForecasts())
 				{
 					boolean verifiedForecast = verifyForecast(forecast, match);

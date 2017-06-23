@@ -125,6 +125,13 @@ public class Match implements Serializable{
 			return false;
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "Match [id=" + id + ", dateStart=" + dateStart + ", homeTeam=" + homeTeam + ", awayTeam=" + awayTeam
+				+ ", competition=" + competition + ", finalScore=" + finalScore + ", halftimeScore=" + halftimeScore
+				+ ", dateCreated=" + dateCreated + ", dateUpdated=" + dateUpdated + "]";
+	}
 	
 	
 	

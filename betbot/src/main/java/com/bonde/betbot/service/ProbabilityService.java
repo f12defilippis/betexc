@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.transaction.Transactional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,7 @@ import com.bonde.betbot.model.domain.ForecastSummary;
 import com.bonde.betbot.model.domain.ForecastValue;
 import com.bonde.betbot.model.domain.ValueBet;
 import com.bonde.betbot.model.domain.ValueGroup;
+import com.bonde.betbot.model.domain.ValueGroupType;
 import com.bonde.betbot.repository.ForecastFinalRepository;
 import com.bonde.betbot.repository.ForecastSummaryRepository;
 import com.bonde.betbot.repository.ValueBetRepository;
@@ -43,6 +46,8 @@ public class ProbabilityService {
 	@Autowired
 	private ForecastFinalRepository forecastFinalRepository;
 	
+	
+	@Transactional
 	public void findProbabilities(Date date)
 	{
 
@@ -76,133 +81,146 @@ public class ProbabilityService {
 		ForecastValue forecastValue = vb.getForecast().getForecastValue();
 		List<ValueGroup> forecastValueGroupList = valueGroupRepository.findValueGroupByValueInRange(forecastValue.getValue()); 
 
+		ValueGroup fv2 = null;
+		ValueGroup fv5 = null;
+		for(ValueGroup vg : forecastValueGroupList)
+		{
+			if(vg.getValueGroupType().getId() == ValueGroupType.T2)
+			{
+				fv2 = vg;
+			}else if(vg.getValueGroupType().getId() == ValueGroupType.T5)
+			{
+				fv5 = vg;
+			}
+		}
+		
 		ForecastValue marginValue = vb.getMargin();
 		List<ValueGroup> marginValueGroupList = valueGroupRepository.findValueGroupByValueInRange(marginValue.getValue()); 
 
+		ValueGroup vb2 = null;
+		ValueGroup vb5 = null;
+		for(ValueGroup vg : marginValueGroupList)
+		{
+			if(vg.getValueGroupType().getId() == ValueGroupType.T2)
+			{
+				vb2 = vg;
+			}else if(vg.getValueGroupType().getId() == ValueGroupType.T5)
+			{
+				vb5 = vg;
+			}
+		}
+		
+		
+		boolean found = false;
 		List<ForecastSummary> forecastSummaries = null;
 		
 		forecastSummaries = forecastSummaryRepository.findBySourceAndForecastValueAndValueBetAndForecastTypeOccurrenceAndFinalDateBetween(vb.getForecast().getSource(), forecastValue, marginValue, vb.getForecast().getForecastTypeOccurrence(), DateUtil.addDaysToDate(date, Threshold.DAYS_BEFORE*(-1)), date);
 		String forecastSummaryParameter = "FV0-VB0-FTOY";
-		if(!checkSummaries(forecastSummaries,forecastSummaryParameter,vb))
+		
+		found = checkSummaries(forecastSummaries,forecastSummaryParameter,vb);
+		
+		//FV0-VB2-FTOY
+		if(!found)
 		{
-			// NO FTO
-			forecastSummaries = forecastSummaryRepository.findBySourceAndForecastValueAndValueBetAndForecastTypeOccurrenceAndFinalDateBetween(vb.getForecast().getSource(), forecastValue, marginValue, null, DateUtil.addDaysToDate(date, Threshold.DAYS_BEFORE*(-1)), date);
-			forecastSummaryParameter = "FV0-VB0-FTON";
+			forecastSummaries = forecastSummaryRepository.findBySourceAndForecastValueAndValueBetGroupAndForecastTypeOccurrenceAndFinalDateBetween
+					(vb.getForecast().getSource(), forecastValue, vb2, vb.getForecast().getForecastTypeOccurrence(), DateUtil.addDaysToDate(date, Threshold.DAYS_BEFORE*(-1)), date);
+			forecastSummaryParameter = "FV0-VB2-FTOY";
+			found = checkSummaries(forecastSummaries,forecastSummaryParameter,vb);
 		}
 
-
-		
-		int valueGroupTypes [] = {1,2,3};
-		
-		
-		for(int i = 3 ; i >= 1 ; i--)
+		//FV2-VB2-FTOY
+		if(!found)
 		{
-			int vgType = valueGroupTypes[i-1];
+			forecastSummaries = forecastSummaryRepository.findBySourceAndValueGroupAndValueBetGroupAndForecastTypeOccurrenceAndFinalDateBetween
+					(vb.getForecast().getSource(), fv2, vb2, vb.getForecast().getForecastTypeOccurrence(), DateUtil.addDaysToDate(date, Threshold.DAYS_BEFORE*(-1)), date);
+			forecastSummaryParameter = "FV2-VB2-FTOY";
+			found = checkSummaries(forecastSummaries,forecastSummaryParameter,vb);
+		}
+
+		//FV0-VB5-FTOY
+		if(!found)
+		{
+			forecastSummaries = forecastSummaryRepository.findBySourceAndForecastValueAndValueBetGroupAndForecastTypeOccurrenceAndFinalDateBetween
+					(vb.getForecast().getSource(), forecastValue, vb5, vb.getForecast().getForecastTypeOccurrence(), DateUtil.addDaysToDate(date, Threshold.DAYS_BEFORE*(-1)), date);
+			forecastSummaryParameter = "FV0-VB5-FTOY";
+			found = checkSummaries(forecastSummaries,forecastSummaryParameter,vb);
+		}
+
+		//FV2-VB5-FTOY
+		if(!found)
+		{
+			forecastSummaries = forecastSummaryRepository.findBySourceAndValueGroupAndValueBetGroupAndForecastTypeOccurrenceAndFinalDateBetween
+					(vb.getForecast().getSource(), fv2, vb5, vb.getForecast().getForecastTypeOccurrence(), DateUtil.addDaysToDate(date, Threshold.DAYS_BEFORE*(-1)), date);
+			forecastSummaryParameter = "FV2-VB5-FTOY";
+			found = checkSummaries(forecastSummaries,forecastSummaryParameter,vb);
+		}
 
 		
-			if(!checkSummaries(forecastSummaries,forecastSummaryParameter,vb))
-			{
-				ValueGroup value2vb = null;
-				for(ValueGroup vg : marginValueGroupList)
-				{
-					if(vg.getValueGroupType().getId() == vgType)
-					{
-						value2vb = vg;
-					}
-				}
-				
-				if(value2vb!=null)
-				{
-					// vb2
-					forecastSummaries = forecastSummaryRepository.findBySourceAndForecastValueAndValueBetGroupAndForecastTypeOccurrenceAndFinalDateBetween
-							(vb.getForecast().getSource(), forecastValue, value2vb, vb.getForecast().getForecastTypeOccurrence(), DateUtil.addDaysToDate(date, Threshold.DAYS_BEFORE*(-1)), date);
-					forecastSummaryParameter = "FV0-VB" + i + "-FTOY";
-				}
-			}
+		//FV0-VB0-FTON
+		if(!found)
+		{
+			forecastSummaries = forecastSummaryRepository.findBySourceAndForecastValueAndValueBetAndForecastTypeOccurrenceAndFinalDateBetween(vb.getForecast().getSource(), forecastValue, marginValue, null, DateUtil.addDaysToDate(date, Threshold.DAYS_BEFORE*(-1)), date);
+			forecastSummaryParameter = "FV0-VB0-FTON";
+			found = checkSummaries(forecastSummaries,forecastSummaryParameter,vb);
+		}
+		
+		//FV0-VB2-FTON
+		if(!found)
+		{
+			forecastSummaries = forecastSummaryRepository.findBySourceAndForecastValueAndValueBetGroupAndForecastTypeOccurrenceAndFinalDateBetween
+					(vb.getForecast().getSource(), forecastValue, vb2, null, DateUtil.addDaysToDate(date, Threshold.DAYS_BEFORE*(-1)), date);
+			forecastSummaryParameter = "FV0-VB2-FTON";
+			found = checkSummaries(forecastSummaries,forecastSummaryParameter,vb);
+		}
+		
+		//FV2-VB2-FTON
+		if(!found)
+		{
+			forecastSummaries = forecastSummaryRepository.findBySourceAndValueGroupAndValueBetGroupAndForecastTypeOccurrenceAndFinalDateBetween
+					(vb.getForecast().getSource(), fv2, vb2, null, DateUtil.addDaysToDate(date, Threshold.DAYS_BEFORE*(-1)), date);
+			forecastSummaryParameter = "FV2-VB2-FTON";
+			found = checkSummaries(forecastSummaries,forecastSummaryParameter,vb);
+		}
+		
+		//FV0-VB5-FTON
+		if(!found)
+		{
+			forecastSummaries = forecastSummaryRepository.findBySourceAndForecastValueAndValueBetGroupAndForecastTypeOccurrenceAndFinalDateBetween
+					(vb.getForecast().getSource(), forecastValue, vb5, null, DateUtil.addDaysToDate(date, Threshold.DAYS_BEFORE*(-1)), date);
+			forecastSummaryParameter = "FV0-VB5-FTON";
+			found = checkSummaries(forecastSummaries,forecastSummaryParameter,vb);
+		}		
 
-			
-			
-			if(!checkSummaries(forecastSummaries,forecastSummaryParameter,vb))
-			{
-				ValueGroup value2vb = null;
-				for(ValueGroup vg : marginValueGroupList)
-				{
-					if(vg.getValueGroupType().getId() == vgType)
-					{
-						value2vb = vg;
-					}
-				}
-				
-				// vb2 NO FTO
-				forecastSummaries = forecastSummaryRepository.findBySourceAndForecastValueAndValueBetGroupAndForecastTypeOccurrenceAndFinalDateBetween
-						(vb.getForecast().getSource(), forecastValue, value2vb, null, DateUtil.addDaysToDate(date, Threshold.DAYS_BEFORE*(-1)), date);
-				forecastSummaryParameter = "FV0-VB" + i + "-FTON";
-			}
-			
-			if(!checkSummaries(forecastSummaries,forecastSummaryParameter,vb))
-			{
-				ValueGroup value2vb = null;
-				for(ValueGroup vg : marginValueGroupList)
-				{
-					if(vg.getValueGroupType().getId() == vgType)
-					{
-						value2vb = vg;
-					}
-				}
+		//FV2-VB5-FTON
+		if(!found)
+		{
+			forecastSummaries = forecastSummaryRepository.findBySourceAndValueGroupAndValueBetGroupAndForecastTypeOccurrenceAndFinalDateBetween
+					(vb.getForecast().getSource(), fv2, vb5, null, DateUtil.addDaysToDate(date, Threshold.DAYS_BEFORE*(-1)), date);
+			forecastSummaryParameter = "FV2-VB5-FTON";
+			found = checkSummaries(forecastSummaries,forecastSummaryParameter,vb);
+		}
+		
+		//FV5-VB5-FTOY
+		if(!found)
+		{
+			forecastSummaries = forecastSummaryRepository.findBySourceAndValueGroupAndValueBetGroupAndForecastTypeOccurrenceAndFinalDateBetween
+					(vb.getForecast().getSource(), fv5, vb5, vb.getForecast().getForecastTypeOccurrence(), DateUtil.addDaysToDate(date, Threshold.DAYS_BEFORE*(-1)), date);
+			forecastSummaryParameter = "FV5-VB5-FTOY";
+			found = checkSummaries(forecastSummaries,forecastSummaryParameter,vb);
+		}
+		
+		//FV5-VB5-FTON
+		if(!found)
+		{
+			forecastSummaries = forecastSummaryRepository.findBySourceAndValueGroupAndValueBetGroupAndForecastTypeOccurrenceAndFinalDateBetween
+					(vb.getForecast().getSource(), fv5, vb5, null, DateUtil.addDaysToDate(date, Threshold.DAYS_BEFORE*(-1)), date);
+			forecastSummaryParameter = "FV5-VB5-FTON";
+			found = checkSummaries(forecastSummaries,forecastSummaryParameter,vb);
+		}
 
-				ValueGroup value2fv = null;
-				for(ValueGroup vg : forecastValueGroupList)
-				{
-					if(vg.getValueGroupType().getId() == vgType)
-					{
-						value2fv = vg;
-					}
-				}
-				
-				
-				if(value2vb!=null && value2fv!=null)
-				{
-					// vb2 fv2
-					forecastSummaries = forecastSummaryRepository.findBySourceAndValueGroupAndValueBetGroupAndForecastTypeOccurrenceAndFinalDateBetween
-							(vb.getForecast().getSource(), value2fv, value2vb, vb.getForecast().getForecastTypeOccurrence(), DateUtil.addDaysToDate(date, Threshold.DAYS_BEFORE*(-1)), date);
-					forecastSummaryParameter = "FV" + i + "-VB" + i + "-FTOY";
-				}
-			}
-
-			if(!checkSummaries(forecastSummaries,forecastSummaryParameter,vb))
-			{
-				ValueGroup value2vb = null;
-				for(ValueGroup vg : marginValueGroupList)
-				{
-					if(vg.getValueGroupType().getId() == vgType)
-					{
-						value2vb = vg;
-					}
-				}
-
-				ValueGroup value2fv = null;
-				for(ValueGroup vg : forecastValueGroupList)
-				{
-					if(vg.getValueGroupType().getId() == vgType)
-					{
-						value2fv = vg;
-					}
-				}
-				
-				
-				if(value2vb!=null && value2fv!=null)
-				{
-					// vb2 fv2 NO FTO
-					forecastSummaries = forecastSummaryRepository.findBySourceAndValueGroupAndValueBetGroupAndForecastTypeOccurrenceAndFinalDateBetween
-							(vb.getForecast().getSource(), value2fv, value2vb, null, DateUtil.addDaysToDate(date, Threshold.DAYS_BEFORE*(-1)), date);
-					forecastSummaryParameter = "FV" + i + "-VB" + i + "-FTON";
-				}
-			}			
-
-			if(checkSummaries(forecastSummaries,forecastSummaryParameter,vb))
-			{
-				forecastFinalSave(forecastSummaries, vb, forecastSummaryParameter);
-			}
+		if(found)
+		{
+			forecastFinalSave(forecastSummaries, vb, forecastSummaryParameter);
 		}
 		
 	}
@@ -250,24 +268,20 @@ public class ProbabilityService {
 		Map<Integer,Map<Integer,Map<Integer,List<ForecastFinal>>>> forecastFinalsMap = new HashMap<Integer,Map<Integer,Map<Integer,List<ForecastFinal>>>>();
 
 		// MATCH - FTO - SOURCE
-		Map<Integer,Map<Integer,Map<Integer,List<ForecastFinal>>>> forecastFtoSourceMap = new HashMap<Integer,Map<Integer,Map<Integer,List<ForecastFinal>>>>();
+		Map<Integer,Map<Integer,List<ForecastFinal>>> forecastFtoSourceMap = new HashMap<Integer,Map<Integer,List<ForecastFinal>>>();
 		
 		for(ForecastFinal ff : forecastFinalList)
 		{
 			if(forecastFinalsMap.get(ff.getMatch().getId())==null)
 			{
-				Map<Integer,List<ForecastFinal>> ffList = new HashMap<Integer,List<ForecastFinal>>();
 				Map<Integer,Map<Integer,List<ForecastFinal>>> forecastFinalsInternalMap = new HashMap<Integer, Map<Integer,List<ForecastFinal>>>();
-				forecastFinalsInternalMap.put(ff.getSource().getId(), ffList);
 				forecastFinalsMap.put(ff.getMatch().getId(), forecastFinalsInternalMap);
 			}
 
 			if(forecastFinalsMap.get(ff.getMatch().getId()).get(ff.getSource().getId())==null)
 			{
-				Map<Integer,List<ForecastFinal>> ffList = new HashMap<Integer,List<ForecastFinal>>();
-				Map<Integer,Map<Integer,List<ForecastFinal>>> forecastFinalsInternalMap = new HashMap<Integer, Map<Integer,List<ForecastFinal>>>();
-				forecastFinalsInternalMap.put(ff.getSource().getId(), ffList);
-				forecastFinalsMap.put(ff.getMatch().getId(), forecastFinalsInternalMap);
+				Map<Integer,List<ForecastFinal>> forecastFinalsInternalMap = new HashMap<Integer,List<ForecastFinal>>();
+				forecastFinalsMap.get(ff.getMatch().getId()).put(ff.getSource().getId(), forecastFinalsInternalMap);
 			}
 			
 			if(forecastFinalsMap.get(ff.getMatch().getId()).get(ff.getSource().getId()).get(ff.getForecastTypeOccurrence().getForecastType().getId())==null)
@@ -279,30 +293,23 @@ public class ProbabilityService {
 			forecastFinalsMap.get(ff.getMatch().getId()).get(ff.getSource().getId()).get(ff.getForecastTypeOccurrence().getForecastType().getId()).add(ff);
 
 		
-		
+
+			
+			
 			if(forecastFtoSourceMap.get(ff.getMatch().getId())==null)
 			{
-				Map<Integer,List<ForecastFinal>> ffList = new HashMap<Integer,List<ForecastFinal>>();
-				Map<Integer,Map<Integer,List<ForecastFinal>>> forecastFinalsInternalMap = new HashMap<Integer, Map<Integer,List<ForecastFinal>>>();
-				forecastFinalsInternalMap.put(ff.getForecastTypeOccurrence().getId(), ffList);
+				Map<Integer,List<ForecastFinal>> forecastFinalsInternalMap = new HashMap<Integer, List<ForecastFinal>>();
 				forecastFtoSourceMap.put(ff.getMatch().getId(), forecastFinalsInternalMap);
 			}
-		
+
 			if(forecastFtoSourceMap.get(ff.getMatch().getId()).get(ff.getForecastTypeOccurrence().getId())==null)
 			{
-				Map<Integer,List<ForecastFinal>> ffList = new HashMap<Integer,List<ForecastFinal>>();
-				Map<Integer,Map<Integer,List<ForecastFinal>>> forecastFinalsInternalMap = new HashMap<Integer, Map<Integer,List<ForecastFinal>>>();
-				forecastFinalsInternalMap.put(ff.getForecastTypeOccurrence().getId(), ffList);
-				forecastFtoSourceMap.put(ff.getMatch().getId(), forecastFinalsInternalMap);
+				List<ForecastFinal> forecastFinalsList = new ArrayList<ForecastFinal>();
+				forecastFtoSourceMap.get(ff.getMatch().getId()).put(ff.getForecastTypeOccurrence().getId(), forecastFinalsList);
 			}
 			
-			if(forecastFtoSourceMap.get(ff.getMatch().getId()).get(ff.getForecastTypeOccurrence().getId()).get(ff.getSource().getId())==null)
-			{
-				List<ForecastFinal> ffList = new ArrayList<ForecastFinal>();
-				forecastFtoSourceMap.get(ff.getMatch().getId()).get(ff.getForecastTypeOccurrence().getId()).put(ff.getSource().getId(), ffList);
-			}
-			
-			forecastFtoSourceMap.get(ff.getMatch().getId()).get(ff.getForecastTypeOccurrence().getId()).get(ff.getSource().getId()).add(ff);
+
+			forecastFtoSourceMap.get(ff.getMatch().getId()).get(ff.getForecastTypeOccurrence().getId()).add(ff);
 		
 		}
 
@@ -330,53 +337,52 @@ public class ProbabilityService {
 		}
 		
 		//MATCH
-		for(Map.Entry<Integer,Map<Integer,Map<Integer,List<ForecastFinal>>>> entry  : forecastFtoSourceMap.entrySet())
+		for(Map.Entry<Integer,Map<Integer,List<ForecastFinal>>> entry  : forecastFtoSourceMap.entrySet())
 		{
 			//FTO
-			for(Map.Entry<Integer,Map<Integer,List<ForecastFinal>>> internalEntry  : entry.getValue().entrySet())
+			for(Map.Entry<Integer,List<ForecastFinal>> internalEntry  : entry.getValue().entrySet())
 			{
 				//SOURCE
-				for(Map.Entry<Integer,List<ForecastFinal>> internalEntry2  : internalEntry.getValue().entrySet())
-				{
-					List<ForecastFinal> listToOrder = internalEntry2.getValue();
-					Collections.sort(listToOrder, ForecastFinal.sortByProbabilityVariation());
-
-					double weightSum = 0.0;
-					double adjustedProbabilitySum = 0.0;
-					double initialProbabilitySum = 0.0;
-					String forecastParameter = "";
-					for(int i = 0 ; i < 3 && i < listToOrder.size() ; i++)
+					List<ForecastFinal> listToOrder = internalEntry.getValue();
+					if(listToOrder.size()>1)
 					{
-						ForecastFinal ff = listToOrder.get(i);
-						double weight = 1 - ff.getProbabilityVariation();
-						weightSum = weightSum + weight;
-						adjustedProbabilitySum = adjustedProbabilitySum + (ff.getAdjustedProbability() * weight);
-						initialProbabilitySum = initialProbabilitySum + (ff.getInitialProbability() * weight);
-						forecastParameter = forecastParameter + "-" + ff.getSource().getDescription();
-					}
-					
-					double finalAdjustedProbability = adjustedProbabilitySum/weightSum;
-					double finalInitialProbability = initialProbabilitySum/weightSum;
-					
-					double oddForecast = 1/listToOrder.get(0).getOdd().getFirstValue();
-					
-					ForecastFinal forecastFinal = new ForecastFinal();
-//					forecastFinal.setSource(vb.getForecast().getSource());
-					forecastFinal.setMatch(listToOrder.get(0).getMatch());
-					forecastFinal.setOdd(listToOrder.get(0).getOdd());
-					forecastFinal.setForecastTypeOccurrence(listToOrder.get(0).getForecastTypeOccurrence());
-					forecastFinal.setInitialProbability(finalInitialProbability);
-					forecastFinal.setInitialMargin((finalInitialProbability-oddForecast)/oddForecast);
-					forecastFinal.setAdjustedProbability(finalAdjustedProbability);
-					forecastFinal.setAdjustedMargin((finalAdjustedProbability-oddForecast)/oddForecast);
-					forecastFinal.setProbabilityVariation((finalAdjustedProbability-finalInitialProbability)/finalInitialProbability);
-					forecastFinal.setForecastSummaryParameter(forecastParameter);
-					forecastFinal.setSqmaverage(calculateSQMFF(listToOrder));					
-					
-					forecastFinal.setForecastTypeOccurrenceOrder(listToOrder.get(0).getForecastTypeOccurrenceOrder());
-					
-					forecastFinalRepository.save(forecastFinal);
-					
+						Collections.sort(listToOrder, ForecastFinal.sortByProbabilityVariation());
+
+						double weightSum = 0.0;
+						double adjustedProbabilitySum = 0.0;
+						double initialProbabilitySum = 0.0;
+						String forecastParameter = "";
+						for(int i = 0 ; i < 3 && i < listToOrder.size() ; i++)
+						{
+							ForecastFinal ff = listToOrder.get(i);
+							double weight = 1 - ff.getProbabilityVariation();
+							weightSum = weightSum + weight;
+							adjustedProbabilitySum = adjustedProbabilitySum + (ff.getAdjustedProbability() * weight);
+							initialProbabilitySum = initialProbabilitySum + (ff.getInitialProbability() * weight);
+							forecastParameter = forecastParameter + "-" + ff.getSource().getDescription();
+						}
+						
+						double finalAdjustedProbability = adjustedProbabilitySum/weightSum;
+						double finalInitialProbability = initialProbabilitySum/weightSum;
+						
+						double oddForecast = 1/listToOrder.get(0).getOdd().getFirstValue();
+						
+						ForecastFinal forecastFinal = new ForecastFinal();
+//						forecastFinal.setSource(vb.getForecast().getSource());
+						forecastFinal.setMatch(listToOrder.get(0).getMatch());
+						forecastFinal.setOdd(listToOrder.get(0).getOdd());
+						forecastFinal.setForecastTypeOccurrence(listToOrder.get(0).getForecastTypeOccurrence());
+						forecastFinal.setInitialProbability(finalInitialProbability);
+						forecastFinal.setInitialMargin((finalInitialProbability-oddForecast)/oddForecast);
+						forecastFinal.setAdjustedProbability(finalAdjustedProbability);
+						forecastFinal.setAdjustedMargin((finalAdjustedProbability-oddForecast)/oddForecast);
+						forecastFinal.setProbabilityVariation((finalAdjustedProbability-finalInitialProbability)/finalInitialProbability);
+						forecastFinal.setForecastSummaryParameter(forecastParameter);
+						forecastFinal.setSqmaverage(calculateSQMFF(listToOrder));					
+						
+						forecastFinal.setForecastTypeOccurrenceOrder(listToOrder.get(0).getForecastTypeOccurrenceOrder());
+						log.info(forecastFinal.toString());
+						forecastFinalRepository.save(forecastFinal);
 				}				
 			}
 		}		
@@ -396,7 +402,7 @@ public class ProbabilityService {
 			
 			if(sqmaverage <= Threshold.MAX_VARIANCE)
 			{
-				log.info("Final Forecast FOUND! Match: " + vb.getForecast().getMatch().getHomeTeam().getName() + " - " + vb.getForecast().getMatch().getAwayTeam().getName()
+				log.info("Final Forecast FOUND! Source: " + vb.getForecast().getSource().getDescription() + " Match: " + vb.getForecast().getMatch().getHomeTeam().getName() + " - " + vb.getForecast().getMatch().getAwayTeam().getName()
 						+ " FT: " + vb.getForecast().getForecastTypeOccurrence().getForecastType().getDescription() + " FTO: " + vb.getForecast().getForecastTypeOccurrence().getDescription()
 						+ " Parameters: " + forecastSummaryParameter);
 				return true;
@@ -453,7 +459,15 @@ public class ProbabilityService {
 		DecimalFormat df = new DecimalFormat("#.##");
 		df.setRoundingMode(RoundingMode.CEILING);			
 		
-		Double sqmaverage = Double.valueOf(df.format(sqm/average).replace(",", "."));
+		Double sqmaverage = 0.0;
+		try
+		{
+			sqmaverage = Double.valueOf(df.format(sqm/average).replace(",", "."));
+			
+		}catch(NumberFormatException ex)
+		{
+			log.warn("NFE" + ex.getMessage());
+		}
 		return sqmaverage;
 	}	
 	

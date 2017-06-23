@@ -87,6 +87,12 @@ public class Odd implements Serializable{
 	public void setFirstValue(double firstValue) {
 		this.firstValue = firstValue;
 	}
+
+	@Override
+	public String toString() {
+		return "Odd [id=" + id + ", match=" + match + ", forecastTypeOccurrence=" + forecastTypeOccurrence
+				+ ", dateCreated=" + dateCreated + ", dateUpdated=" + dateUpdated + ", firstValue=" + firstValue + "]";
+	}
 	
 	
 	

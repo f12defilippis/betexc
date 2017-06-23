@@ -219,8 +219,8 @@ public class ForecastFinal implements Serializable{
 
 	@Override
 	public String toString() {
-		return "ForecastFinal [id=" + id + ", odd=" + odd + ", source=" + source + ", match=" + match
-				+ ", forecastTypeOccurrence=" + forecastTypeOccurrence + ", initialProbability=" + initialProbability
+		return "ForecastFinal [id=" + id + ", odd=" + odd.toString() + ", source=" + source + ", match=" + match.toString()
+				+ ", forecastTypeOccurrence=" + forecastTypeOccurrence.toString() + ", initialProbability=" + initialProbability
 				+ ", adjustedProbability=" + adjustedProbability + ", initialMargin=" + initialMargin
 				+ ", adjustedMargin=" + adjustedMargin + ", probabilityVariation=" + probabilityVariation
 				+ ", sqmaverage=" + sqmaverage + ", forecastTypeOccurrenceOrder=" + forecastTypeOccurrenceOrder

@@ -68,7 +68,7 @@ public class AsyncService {
 			log.info("*****************************");
 			
 			
-			date = DateUtil.addDaysToDate(date, Threshold.SUMMARY_FREQUENCY);
+			date = DateUtil.addDaysToDate(date, 1);
 			
 		}		
 		

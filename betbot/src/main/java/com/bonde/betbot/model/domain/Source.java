@@ -82,6 +82,11 @@ public class Source implements Serializable{
 			return false;
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "Source [url=" + url + ", id=" + id + ", description=" + description + "]";
+	}
 	
 	
 	
