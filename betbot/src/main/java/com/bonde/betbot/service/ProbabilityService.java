@@ -272,44 +272,47 @@ public class ProbabilityService {
 		
 		for(ForecastFinal ff : forecastFinalList)
 		{
-			if(forecastFinalsMap.get(ff.getMatch().getId())==null)
+			if(ff.getSource()!=null)
 			{
-				Map<Integer,Map<Integer,List<ForecastFinal>>> forecastFinalsInternalMap = new HashMap<Integer, Map<Integer,List<ForecastFinal>>>();
-				forecastFinalsMap.put(ff.getMatch().getId(), forecastFinalsInternalMap);
-			}
+				if(forecastFinalsMap.get(ff.getMatch().getId())==null)
+				{
+					Map<Integer,Map<Integer,List<ForecastFinal>>> forecastFinalsInternalMap = new HashMap<Integer, Map<Integer,List<ForecastFinal>>>();
+					forecastFinalsMap.put(ff.getMatch().getId(), forecastFinalsInternalMap);
+				}
 
-			if(forecastFinalsMap.get(ff.getMatch().getId()).get(ff.getSource().getId())==null)
-			{
-				Map<Integer,List<ForecastFinal>> forecastFinalsInternalMap = new HashMap<Integer,List<ForecastFinal>>();
-				forecastFinalsMap.get(ff.getMatch().getId()).put(ff.getSource().getId(), forecastFinalsInternalMap);
-			}
-			
-			if(forecastFinalsMap.get(ff.getMatch().getId()).get(ff.getSource().getId()).get(ff.getForecastTypeOccurrence().getForecastType().getId())==null)
-			{
-				List<ForecastFinal> ffList = new ArrayList<ForecastFinal>();
-				forecastFinalsMap.get(ff.getMatch().getId()).get(ff.getSource().getId()).put(ff.getForecastTypeOccurrence().getForecastType().getId(), ffList);
-			}
+				if(forecastFinalsMap.get(ff.getMatch().getId()).get(ff.getSource().getId())==null)
+				{
+					Map<Integer,List<ForecastFinal>> forecastFinalsInternalMap = new HashMap<Integer,List<ForecastFinal>>();
+					forecastFinalsMap.get(ff.getMatch().getId()).put(ff.getSource().getId(), forecastFinalsInternalMap);
+				}
+				
+				if(forecastFinalsMap.get(ff.getMatch().getId()).get(ff.getSource().getId()).get(ff.getForecastTypeOccurrence().getForecastType().getId())==null)
+				{
+					List<ForecastFinal> ffList = new ArrayList<ForecastFinal>();
+					forecastFinalsMap.get(ff.getMatch().getId()).get(ff.getSource().getId()).put(ff.getForecastTypeOccurrence().getForecastType().getId(), ffList);
+				}
 
-			forecastFinalsMap.get(ff.getMatch().getId()).get(ff.getSource().getId()).get(ff.getForecastTypeOccurrence().getForecastType().getId()).add(ff);
+				forecastFinalsMap.get(ff.getMatch().getId()).get(ff.getSource().getId()).get(ff.getForecastTypeOccurrence().getForecastType().getId()).add(ff);
 
-		
-
-			
-			
-			if(forecastFtoSourceMap.get(ff.getMatch().getId())==null)
-			{
-				Map<Integer,List<ForecastFinal>> forecastFinalsInternalMap = new HashMap<Integer, List<ForecastFinal>>();
-				forecastFtoSourceMap.put(ff.getMatch().getId(), forecastFinalsInternalMap);
-			}
-
-			if(forecastFtoSourceMap.get(ff.getMatch().getId()).get(ff.getForecastTypeOccurrence().getId())==null)
-			{
-				List<ForecastFinal> forecastFinalsList = new ArrayList<ForecastFinal>();
-				forecastFtoSourceMap.get(ff.getMatch().getId()).put(ff.getForecastTypeOccurrence().getId(), forecastFinalsList);
-			}
 			
 
-			forecastFtoSourceMap.get(ff.getMatch().getId()).get(ff.getForecastTypeOccurrence().getId()).add(ff);
+				
+				
+				if(forecastFtoSourceMap.get(ff.getMatch().getId())==null)
+				{
+					Map<Integer,List<ForecastFinal>> forecastFinalsInternalMap = new HashMap<Integer, List<ForecastFinal>>();
+					forecastFtoSourceMap.put(ff.getMatch().getId(), forecastFinalsInternalMap);
+				}
+
+				if(forecastFtoSourceMap.get(ff.getMatch().getId()).get(ff.getForecastTypeOccurrence().getId())==null)
+				{
+					List<ForecastFinal> forecastFinalsList = new ArrayList<ForecastFinal>();
+					forecastFtoSourceMap.get(ff.getMatch().getId()).put(ff.getForecastTypeOccurrence().getId(), forecastFinalsList);
+				}
+				
+
+				forecastFtoSourceMap.get(ff.getMatch().getId()).get(ff.getForecastTypeOccurrence().getId()).add(ff);
+			}
 		
 		}
 
