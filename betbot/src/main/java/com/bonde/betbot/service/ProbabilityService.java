@@ -156,49 +156,49 @@ public class ProbabilityService {
 		}
 
 		
-		//FV0-VB0-FTON
-		if(!found)
-		{
-			forecastSummaries = forecastSummaryRepository.findBySourceAndForecastValueAndValueBetAndForecastTypeOccurrenceAndFinalDateBetween(vb.getForecast().getSource(), forecastValue, marginValue, null, DateUtil.addDaysToDate(date, Threshold.DAYS_BEFORE*(-1)), date);
-			forecastSummaryParameter = "FV0-VB0-FTON";
-			found = checkSummaries(forecastSummaries,forecastSummaryParameter,vb);
-		}
-		
-		//FV0-VB2-FTON
-		if(!found)
-		{
-			forecastSummaries = forecastSummaryRepository.findBySourceAndForecastValueAndValueBetGroupAndForecastTypeOccurrenceAndFinalDateBetween
-					(vb.getForecast().getSource(), forecastValue, vb2, null, DateUtil.addDaysToDate(date, Threshold.DAYS_BEFORE*(-1)), date);
-			forecastSummaryParameter = "FV0-VB2-FTON";
-			found = checkSummaries(forecastSummaries,forecastSummaryParameter,vb);
-		}
-		
-		//FV2-VB2-FTON
-		if(!found)
-		{
-			forecastSummaries = forecastSummaryRepository.findBySourceAndValueGroupAndValueBetGroupAndForecastTypeOccurrenceAndFinalDateBetween
-					(vb.getForecast().getSource(), fv2, vb2, null, DateUtil.addDaysToDate(date, Threshold.DAYS_BEFORE*(-1)), date);
-			forecastSummaryParameter = "FV2-VB2-FTON";
-			found = checkSummaries(forecastSummaries,forecastSummaryParameter,vb);
-		}
-		
-		//FV0-VB5-FTON
-		if(!found)
-		{
-			forecastSummaries = forecastSummaryRepository.findBySourceAndForecastValueAndValueBetGroupAndForecastTypeOccurrenceAndFinalDateBetween
-					(vb.getForecast().getSource(), forecastValue, vb5, null, DateUtil.addDaysToDate(date, Threshold.DAYS_BEFORE*(-1)), date);
-			forecastSummaryParameter = "FV0-VB5-FTON";
-			found = checkSummaries(forecastSummaries,forecastSummaryParameter,vb);
-		}		
-
-		//FV2-VB5-FTON
-		if(!found)
-		{
-			forecastSummaries = forecastSummaryRepository.findBySourceAndValueGroupAndValueBetGroupAndForecastTypeOccurrenceAndFinalDateBetween
-					(vb.getForecast().getSource(), fv2, vb5, null, DateUtil.addDaysToDate(date, Threshold.DAYS_BEFORE*(-1)), date);
-			forecastSummaryParameter = "FV2-VB5-FTON";
-			found = checkSummaries(forecastSummaries,forecastSummaryParameter,vb);
-		}
+//		//FV0-VB0-FTON
+//		if(!found)
+//		{
+//			forecastSummaries = forecastSummaryRepository.findBySourceAndForecastValueAndValueBetAndForecastTypeOccurrenceAndFinalDateBetween(vb.getForecast().getSource(), forecastValue, marginValue, null, DateUtil.addDaysToDate(date, Threshold.DAYS_BEFORE*(-1)), date);
+//			forecastSummaryParameter = "FV0-VB0-FTON";
+//			found = checkSummaries(forecastSummaries,forecastSummaryParameter,vb);
+//		}
+//		
+//		//FV0-VB2-FTON
+//		if(!found)
+//		{
+//			forecastSummaries = forecastSummaryRepository.findBySourceAndForecastValueAndValueBetGroupAndForecastTypeOccurrenceAndFinalDateBetween
+//					(vb.getForecast().getSource(), forecastValue, vb2, null, DateUtil.addDaysToDate(date, Threshold.DAYS_BEFORE*(-1)), date);
+//			forecastSummaryParameter = "FV0-VB2-FTON";
+//			found = checkSummaries(forecastSummaries,forecastSummaryParameter,vb);
+//		}
+//		
+//		//FV2-VB2-FTON
+//		if(!found)
+//		{
+//			forecastSummaries = forecastSummaryRepository.findBySourceAndValueGroupAndValueBetGroupAndForecastTypeOccurrenceAndFinalDateBetween
+//					(vb.getForecast().getSource(), fv2, vb2, null, DateUtil.addDaysToDate(date, Threshold.DAYS_BEFORE*(-1)), date);
+//			forecastSummaryParameter = "FV2-VB2-FTON";
+//			found = checkSummaries(forecastSummaries,forecastSummaryParameter,vb);
+//		}
+//		
+//		//FV0-VB5-FTON
+//		if(!found)
+//		{
+//			forecastSummaries = forecastSummaryRepository.findBySourceAndForecastValueAndValueBetGroupAndForecastTypeOccurrenceAndFinalDateBetween
+//					(vb.getForecast().getSource(), forecastValue, vb5, null, DateUtil.addDaysToDate(date, Threshold.DAYS_BEFORE*(-1)), date);
+//			forecastSummaryParameter = "FV0-VB5-FTON";
+//			found = checkSummaries(forecastSummaries,forecastSummaryParameter,vb);
+//		}		
+//
+//		//FV2-VB5-FTON
+//		if(!found)
+//		{
+//			forecastSummaries = forecastSummaryRepository.findBySourceAndValueGroupAndValueBetGroupAndForecastTypeOccurrenceAndFinalDateBetween
+//					(vb.getForecast().getSource(), fv2, vb5, null, DateUtil.addDaysToDate(date, Threshold.DAYS_BEFORE*(-1)), date);
+//			forecastSummaryParameter = "FV2-VB5-FTON";
+//			found = checkSummaries(forecastSummaries,forecastSummaryParameter,vb);
+//		}
 		
 		//FV5-VB5-FTOY
 		if(!found)
@@ -209,14 +209,14 @@ public class ProbabilityService {
 			found = checkSummaries(forecastSummaries,forecastSummaryParameter,vb);
 		}
 		
-		//FV5-VB5-FTON
-		if(!found)
-		{
-			forecastSummaries = forecastSummaryRepository.findBySourceAndValueGroupAndValueBetGroupAndForecastTypeOccurrenceAndFinalDateBetween
-					(vb.getForecast().getSource(), fv5, vb5, null, DateUtil.addDaysToDate(date, Threshold.DAYS_BEFORE*(-1)), date);
-			forecastSummaryParameter = "FV5-VB5-FTON";
-			found = checkSummaries(forecastSummaries,forecastSummaryParameter,vb);
-		}
+//		//FV5-VB5-FTON
+//		if(!found)
+//		{
+//			forecastSummaries = forecastSummaryRepository.findBySourceAndValueGroupAndValueBetGroupAndForecastTypeOccurrenceAndFinalDateBetween
+//					(vb.getForecast().getSource(), fv5, vb5, null, DateUtil.addDaysToDate(date, Threshold.DAYS_BEFORE*(-1)), date);
+//			forecastSummaryParameter = "FV5-VB5-FTON";
+//			found = checkSummaries(forecastSummaries,forecastSummaryParameter,vb);
+//		}
 
 		if(found)
 		{
