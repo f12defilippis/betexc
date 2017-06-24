@@ -200,14 +200,14 @@ public class ProbabilityService {
 //			found = checkSummaries(forecastSummaries,forecastSummaryParameter,vb);
 //		}
 		
-		//FV5-VB5-FTOY
-		if(!found)
-		{
-			forecastSummaries = forecastSummaryRepository.findBySourceAndValueGroupAndValueBetGroupAndForecastTypeOccurrenceAndFinalDateBetween
-					(vb.getForecast().getSource(), fv5, vb5, vb.getForecast().getForecastTypeOccurrence(), DateUtil.addDaysToDate(date, Threshold.DAYS_BEFORE*(-1)), date);
-			forecastSummaryParameter = "FV5-VB5-FTOY";
-			found = checkSummaries(forecastSummaries,forecastSummaryParameter,vb);
-		}
+//		//FV5-VB5-FTOY
+//		if(!found)
+//		{
+//			forecastSummaries = forecastSummaryRepository.findBySourceAndValueGroupAndValueBetGroupAndForecastTypeOccurrenceAndFinalDateBetween
+//					(vb.getForecast().getSource(), fv5, vb5, vb.getForecast().getForecastTypeOccurrence(), DateUtil.addDaysToDate(date, Threshold.DAYS_BEFORE*(-1)), date);
+//			forecastSummaryParameter = "FV5-VB5-FTOY";
+//			found = checkSummaries(forecastSummaries,forecastSummaryParameter,vb);
+//		}
 		
 //		//FV5-VB5-FTON
 //		if(!found)
