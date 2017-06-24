@@ -200,14 +200,14 @@ public class ProbabilityService {
 //			found = checkSummaries(forecastSummaries,forecastSummaryParameter,vb);
 //		}
 		
-//		//FV5-VB5-FTOY
-//		if(!found)
-//		{
-//			forecastSummaries = forecastSummaryRepository.findBySourceAndValueGroupAndValueBetGroupAndForecastTypeOccurrenceAndFinalDateBetween
-//					(vb.getForecast().getSource(), fv5, vb5, vb.getForecast().getForecastTypeOccurrence(), DateUtil.addDaysToDate(date, Threshold.DAYS_BEFORE*(-1)), date);
-//			forecastSummaryParameter = "FV5-VB5-FTOY";
-//			found = checkSummaries(forecastSummaries,forecastSummaryParameter,vb);
-//		}
+		//FV5-VB5-FTOY
+		if(!found)
+		{
+			forecastSummaries = forecastSummaryRepository.findBySourceAndValueGroupAndValueBetGroupAndForecastTypeOccurrenceAndFinalDateBetween
+					(vb.getForecast().getSource(), fv5, vb5, vb.getForecast().getForecastTypeOccurrence(), DateUtil.addDaysToDate(date, Threshold.DAYS_BEFORE*(-1)), date);
+			forecastSummaryParameter = "FV5-VB5-FTOY";
+			found = checkSummaries(forecastSummaries,forecastSummaryParameter,vb);
+		}
 		
 //		//FV5-VB5-FTON
 //		if(!found)
@@ -347,7 +347,7 @@ public class ProbabilityService {
 			{
 				//SOURCE
 					List<ForecastFinal> listToOrder = internalEntry.getValue();
-					if(listToOrder.size()>1)
+					if(listToOrder.size()>2)
 					{
 						Collections.sort(listToOrder, ForecastFinal.sortByProbabilityVariation());
 
@@ -355,7 +355,7 @@ public class ProbabilityService {
 						double adjustedProbabilitySum = 0.0;
 						double initialProbabilitySum = 0.0;
 						String forecastParameter = "";
-						for(int i = 0 ; i < 3 && i < listToOrder.size() ; i++)
+						for(int i = 0 ; i < 4 && i < listToOrder.size() ; i++)
 						{
 							ForecastFinal ff = listToOrder.get(i);
 							double weight = 1 - ff.getProbabilityVariation();
