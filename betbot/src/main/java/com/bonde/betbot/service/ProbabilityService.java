@@ -333,7 +333,7 @@ public class ProbabilityService {
 	
 	private void forecastTypeOrderManagement(Date date, String forecastSummaryParameter)
 	{
-		List<ForecastFinal> forecastFinalList = forecastFinalRepository.findByForecastSummaryParameterAndMatchDateStartBetweend(forecastSummaryParameter,date, DateUtil.addDaysToDate(date, 1));
+		List<ForecastFinal> forecastFinalList = forecastFinalRepository.findByForecastSummaryParameterAndMatchDateStartBetween(forecastSummaryParameter,date, DateUtil.addDaysToDate(date, 1));
 		
 		// MATCH - SOURCE - FTO
 		Map<Integer,Map<Integer,Map<Integer,List<ForecastFinal>>>> forecastFinalsMap = new HashMap<Integer,Map<Integer,Map<Integer,List<ForecastFinal>>>>();
