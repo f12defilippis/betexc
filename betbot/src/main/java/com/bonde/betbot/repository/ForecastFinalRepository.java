@@ -11,4 +11,7 @@ public interface ForecastFinalRepository extends CrudRepository<ForecastFinal, I
 
 	List<ForecastFinal> findByMatchDateStartBetween(Date dateStart, Date dateEnd);
 
+	List<ForecastFinal> findByForecastSummaryParameterAndMatchDateStartBetweend(
+			String forecastSummaryParameter, Date date, Date addDaysToDate);
+
 }

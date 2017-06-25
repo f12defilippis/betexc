@@ -69,7 +69,38 @@ public class BetbotController {
 	@RequestMapping("/calculateFinal")
     private String calculateFinal(HttpServletRequest req, @RequestParam(value="date", defaultValue="World") String strdate) throws Exception{
 
-		asyncService.calculateFinal(strdate);
+		String forecastSummaryParameter[] = {
+				"FV0-VB0-FTOY",
+				"FV0-VB2-FTOY",
+				"FV0-VB5-FTOY",
+				"FV2-VB2-FTOY",
+				"FV2-VB5-FTOY",
+				"FV2-VB10-FTOY",
+				"FV5-VB2-FTOY",
+				"FV5-VB5-FTOY",
+				"FV5-VB10-FTOY",
+				"FV10-VB2-FTOY",
+				"FV10-VB5-FTOY",
+				"FV10-VB10-FTOY",
+				"FV0-VB0-FTON",
+				"FV0-VB2-FTON",
+				"FV0-VB5-FTON",
+				"FV2-VB2-FTON",
+				"FV2-VB5-FTON",
+				"FV2-VB10-FTON",
+				"FV5-VB2-FTON",
+				"FV5-VB5-FTON",
+				"FV5-VB10-FTON",
+				"FV10-VB2-FTON",
+				"FV10-VB5-FTON",
+				"FV10-VB10-FTON"
+		};
+		
+		
+		for(int i = 0 ; i< forecastSummaryParameter.length ; i++)
+		{
+			asyncService.calculateFinal(strdate,forecastSummaryParameter[i]);
+		}
 		
 		return "OK!";
     }	

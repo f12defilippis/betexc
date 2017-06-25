@@ -42,7 +42,7 @@ public class AsyncService {
 	private ProbabilityService probabilityService;	
 
 	@Async
-    public String calculateFinal(String strdate) throws Exception{
+    public String calculateFinal(String strdate, String forecastSummaryParameter) throws Exception{
 
 		SimpleDateFormat formatDateHour = new SimpleDateFormat("yyyy-MM-dd");
 		Date date;
@@ -61,7 +61,7 @@ public class AsyncService {
 			log.info("*****NEW DAY*****************");
 			
 			
-			probabilityService.findProbabilities(date);
+			probabilityService.findProbabilities(date,forecastSummaryParameter);
 			
 
 			log.info("*****************************");
